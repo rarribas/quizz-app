@@ -1,2 +1,2 @@
-# quizz-app
+# QUIZZ APP
  Fullstack quiz application using Nextjs.
