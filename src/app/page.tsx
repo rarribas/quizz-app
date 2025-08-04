@@ -1,52 +1,45 @@
 'use client'
 import React from "react";
-import { useState } from "react";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Panel from "@/components/ui/panel";
 import Header from "@/components/ui/header";
+import { useActionState } from "react";
+import { signup } from "./actions/auth-actions";
 
 export default function Home() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-
-  const handleSubmit = async (ev:React.FormEvent<HTMLFormElement>) => {
-    ev.preventDefault();
-
-    try {
-      const response = await axios.post('api/users', {name,email});
-      console.log(response, "RESP")
-    }catch(err){
-      console.log(err);
-    }
-  }
+  const [formState, formAction] = useActionState(signup, {})
 
   return (
     <Panel className="fixed w-[30%] top-[50%] translate-y-[-50%]">
       <Header title="Welcome Back!" desc="Sign in to continue your quizz journey"/>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <Label className="mb-3">Name:</Label>
-          <Input 
-            type='text' 
-            value={name}
-            placeholder="Your fullname"
-            onChange={(ev) => setName(ev.target.value)}
-            className="mb-3"
-          />
-        </div>
+      <form action={formAction}>
         <div>
           <Label className="mb-3">Email:</Label>
           <Input 
             type='email' 
-            value={email}
-            placeholder="Your email"
-            onChange={(ev) => setEmail(ev.target.value)}
+            name='email'
+            id='email'
+            placeholder="Insert Your email"
             className="mb-3"
           />
         </div>
+        <div>
+          <Label className="mb-3">Password:</Label>
+          <Input 
+            type='password'
+            name='password'
+            id='password' 
+            placeholder="Insert your password"
+            className="mb-3"
+          />
+        </div>
+        {formState.errors && (<ul>
+          {Object.keys(formState.errors).map((error) => (
+            <li key={error}>{formState.errors?.[error as keyof typeof formState.errors]}</li>
+          ))}
+        </ul>)}
         <div>
           <Button type='submit'>Submit</Button>
         </div>
