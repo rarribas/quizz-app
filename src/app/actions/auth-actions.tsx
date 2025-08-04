@@ -34,7 +34,32 @@ export async function signup(
   const email = rawEmail as string;
   const password = hashUserPassword(rawPassword as string);
 
-  createUser(email, password);
+  try {
+    await createUser(email, password);
+    // redirect("/quizz");
+  } catch (err: unknown) {
+    console.log(err, "THE ERR");
+    if (
+      typeof err === 'object' &&
+      err !== null &&
+      'code' in err &&
+      (err as { code?: number }).code === 11000
+    ) {
+      return {
+        errors: {
+          email: 'It seems this account already exists. Please choose a different email.',
+        },
+      };
+    }
 
+    return {
+      errors: {
+        email: 'Something went wrong. Please try again.',
+      },
+    };
+
+    // throw err;
+  }
+  
   redirect("/quizz")
 }
