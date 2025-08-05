@@ -9,7 +9,6 @@ export async function createUser(
   email: string, 
   password: string
 ): Promise<CreateUserResult> {
-  console.log('API hit');
 
   try {
     await connectToDatabase();
@@ -20,6 +19,7 @@ export async function createUser(
     return { success: true };
   } catch (err) {
     console.error('Error creating user:', err);
+    throw err;
     return { success: false, error: 'Failed to create user' };
   }
 }

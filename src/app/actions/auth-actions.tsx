@@ -36,7 +36,6 @@ export async function signup(
 
   try {
     await createUser(email, password);
-    // redirect("/quizz");
   } catch (err: unknown) {
     console.log(err, "THE ERR");
     if (
@@ -57,8 +56,6 @@ export async function signup(
         email: 'Something went wrong. Please try again.',
       },
     };
-
-    // throw err;
   }
   
   redirect("/quizz")
