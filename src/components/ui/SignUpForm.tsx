@@ -18,7 +18,7 @@ export default function SignUpForm() {
       const res = signIn("credentials", {
         email: formState.credentials?.email,
         password: formState.credentials?.password,
-        // redirect: false,
+        callbackUrl: "/quizz",
       })
 
       console.log(res, "RESP");

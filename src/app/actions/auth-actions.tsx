@@ -69,10 +69,4 @@ export async function signup(
       },
     };
   }
-  
-  // return {
-  //   success: true,
-  //   credentials: { email, password }
-  // }
-  // redirect("/quizz")
 }
