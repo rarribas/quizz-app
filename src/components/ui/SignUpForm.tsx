@@ -14,14 +14,11 @@ export default function SignUpForm() {
 
    useEffect(() => {
     if (formState?.success) {
-      // router.push("/quizz");
-      const res = signIn("credentials", {
+      signIn("credentials", {
         email: formState.credentials?.email,
         password: formState.credentials?.password,
         callbackUrl: "/quizz",
       })
-
-      console.log(res, "RESP");
     }
   }, [formState]);
 
