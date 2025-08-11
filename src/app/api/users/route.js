@@ -3,7 +3,6 @@ import User from '@/models/User';
 import { NextResponse } from 'next/server';
 
 export async function POST(request){
-  console.log('API hit')
   try{
     await connectToDatabase()
     const {name,email} = await request.json();

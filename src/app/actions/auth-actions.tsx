@@ -1,23 +1,32 @@
 'use server'
 import { createUser } from "@/lib/user";
+import { signIn } from "next-auth/react";
 import { hashUserPassword } from "@/lib/hash";
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation";
+
+type ErrorsObject = {
+  email?: string;
+  password?: string;
+};
 
 export type SignupFormState = {
-  errors?: {
+  errors?: ErrorsObject;
+  credentials?: {
     email?: string;
     password?: string;
   };
+  success?: boolean,
 };
 
 export async function signup(
   prevState: SignupFormState,
   formData: FormData
 ): Promise<SignupFormState> {
+
   const rawEmail = formData.get('email');
   const rawPassword = formData.get('password')
 
-  const errors: SignupFormState['errors'] = {};
+  const errors = {} as ErrorsObject;
 
   if (typeof rawEmail !== 'string' || !rawEmail.includes('@')) {
     errors.email = 'Please enter a valid email address';
@@ -36,8 +45,11 @@ export async function signup(
 
   try {
     await createUser(email, password);
+    return {
+      success: true,
+      credentials: { email, password: rawPassword as string}
+    }
   } catch (err: unknown) {
-    console.log(err, "THE ERR");
     if (
       typeof err === 'object' &&
       err !== null &&
@@ -58,5 +70,9 @@ export async function signup(
     };
   }
   
-  redirect("/quizz")
+  // return {
+  //   success: true,
+  //   credentials: { email, password }
+  // }
+  // redirect("/quizz")
 }
