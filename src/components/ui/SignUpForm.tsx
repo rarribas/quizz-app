@@ -7,7 +7,6 @@ import Panel from "@/components/ui/panel";
 import Header from "@/components/ui/header";
 import { signup } from "@/app/actions/auth-actions";
 import { signIn } from "next-auth/react";
-import { set } from "mongoose";
 
 export default function SignUpForm() {
   const [formState, formAction] = useActionState(signup, {errors:{}})
@@ -65,7 +64,11 @@ export default function SignUpForm() {
           ))}
         </ul>)}
         <div>
-          <Button type='submit'>{processing ? "Processing ..." : "Submit"}</Button>
+          <Button 
+            disabled={processing}
+            type='submit'>
+              {processing ? "Processing ..." : "Submit"}
+          </Button>
         </div>
       </form>
     </Panel>
