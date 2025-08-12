@@ -1,5 +1,5 @@
 'use client'
-import React, {useActionState, useEffect} from "react";
+import React, {useActionState, useEffect, useState} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,9 +7,12 @@ import Panel from "@/components/ui/panel";
 import Header from "@/components/ui/header";
 import { signup } from "@/app/actions/auth-actions";
 import { signIn } from "next-auth/react";
+import { set } from "mongoose";
 
 export default function SignUpForm() {
   const [formState, formAction] = useActionState(signup, {errors:{}})
+  const [processing, setProcessing] = useState(false);
+
   const errors = formState.errors;
 
    useEffect(() => {
@@ -17,22 +20,31 @@ export default function SignUpForm() {
       signIn("credentials", {
         email: formState.credentials?.email,
         password: formState.credentials?.password,
+        redirect: true,
         callbackUrl: "/quizz",
       })
+    }
+
+    if(formState?.errors){
+      setProcessing(false);
     }
   }, [formState]);
 
   return (
     <Panel className="fixed w-[30%] top-[50%] translate-y-[-50%]">
       <Header title="Welcome Back!" desc="Sign in to continue your quizz journey"/>
-      <form action={formAction}>
+      <form action={(formData) => {
+        setProcessing(true);
+        formAction(formData);
+      }}>
         <div>
           <Label className="mb-3">Email:</Label>
           <Input 
             type='email' 
             name='email'
             id='email'
-            placeholder="Insert Your email"
+            placeholder="Insert your email"
+            disabled={processing}
             className="mb-3"
           />
         </div>
@@ -43,6 +55,7 @@ export default function SignUpForm() {
             name='password'
             id='password' 
             placeholder="Insert your password"
+            disabled={processing}
             className="mb-3"
           />
         </div>
@@ -52,7 +65,7 @@ export default function SignUpForm() {
           ))}
         </ul>)}
         <div>
-          <Button type='submit'>Submit</Button>
+          <Button type='submit'>{processing ? "Processing ..." : "Submit"}</Button>
         </div>
       </form>
     </Panel>
