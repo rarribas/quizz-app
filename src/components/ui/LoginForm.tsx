@@ -8,14 +8,20 @@ import Header from "@/components/ui/header";
 import { login } from "@/app/actions/auth-actions";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
   const [formState, formAction] = useActionState(login, {errors:{}})
   const [processing, setProcessing] = useState(false);
-
+  const searchParams = useSearchParams();
+  const logInError = searchParams.get("error");
   const errors = formState.errors;
 
-   useEffect(() => {
+  if (logInError && logInError === "CredentialsSignin") {
+    formState.errors = { email: "Invalid email or password" };
+  }
+
+  useEffect(() => {
     if (formState?.success) {
       signIn("credentials", {
         email: formState.credentials?.email,

@@ -7,14 +7,21 @@ import Panel from "@/components/ui/panel";
 import Header from "@/components/ui/header";
 import { signup } from "@/app/actions/auth-actions";
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
 export default function SignUpForm() {
   const [formState, formAction] = useActionState(signup, {errors:{}})
   const [processing, setProcessing] = useState(false);
 
+  const searchParams = useSearchParams();
+  const logInError = searchParams.get("error");
   const errors = formState.errors;
 
-   useEffect(() => {
+  if (logInError && logInError === "CredentialsSignin") {
+    formState.errors = { email: "Invalid email or password" };
+  }
+
+  useEffect(() => {
     if (formState?.success) {
       signIn("credentials", {
         email: formState.credentials?.email,
