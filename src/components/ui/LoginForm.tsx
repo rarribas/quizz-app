@@ -5,11 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Panel from "@/components/ui/panel";
 import Header from "@/components/ui/header";
-import { signup } from "@/app/actions/auth-actions";
+import { login } from "@/app/actions/auth-actions";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
-export default function SignUpForm() {
-  const [formState, formAction] = useActionState(signup, {errors:{}})
+export default function LoginForm() {
+  const [formState, formAction] = useActionState(login, {errors:{}})
   const [processing, setProcessing] = useState(false);
 
   const errors = formState.errors;
@@ -31,7 +32,7 @@ export default function SignUpForm() {
 
   return (
     <Panel className="fixed w-[30%] top-[50%] translate-y-[-50%]">
-      <Header title="Welcome!" desc="Please create your account."/>
+      <Header title="Welcome Back!" desc="Sign in to continue your quizz journey"/>
       <form action={(formData) => {
         setProcessing(true);
         formAction(formData);
@@ -67,8 +68,13 @@ export default function SignUpForm() {
           <Button 
             disabled={processing}
             type='submit'>
-              {processing ? "Processing ..." : "Submit"}
+              {processing ? "Processing ..." : "Login"}
           </Button>
+        </div>
+        <div className="aling-center mt-4">
+          <p className="mt-4 text-sm text-muted-foreground">
+            Don&apos;t have an account? <Link href="/signup" className="text-blue-500 hover:underline">Sign Up</Link>
+          </p>
         </div>
       </form>
     </Panel>

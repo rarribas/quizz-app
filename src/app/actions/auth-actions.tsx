@@ -70,3 +70,34 @@ export async function signup(
     };
   }
 }
+
+export async function login(
+  prevState: SignupFormState,
+  formData: FormData
+): Promise<SignupFormState> {
+
+  const rawEmail = formData.get('email');
+  const rawPassword = formData.get('password')
+
+  const errors = {} as ErrorsObject;
+
+  if (typeof rawEmail !== 'string' || !rawEmail.includes('@')) {
+    errors.email = 'Please enter a valid email address';
+  }
+
+  if (typeof rawPassword !== 'string' || rawPassword.trim().length < 8) {
+    errors.password = 'Password must be at least 8 characters long';
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { errors };
+  }
+
+  const email = rawEmail as string;
+  const password = rawPassword as string;
+
+  return {
+    success: true,
+    credentials: { email, password}
+  }
+}
