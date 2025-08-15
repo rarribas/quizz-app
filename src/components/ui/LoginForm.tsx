@@ -1,27 +1,35 @@
 'use client'
-import React, {useActionState, useEffect, useState} from "react";
+import React, {useActionState, useEffect, useState, useMemo} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Panel from "@/components/ui/panel";
 import Header from "@/components/ui/header";
 import { login } from "@/app/actions/auth-actions";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const [formState, formAction] = useActionState(login, {errors:{}})
   const [processing, setProcessing] = useState(false);
   const searchParams = useSearchParams();
   const logInError = searchParams.get("error");
-  const errors = formState.errors;
+  const { status } = useSession();
+  const router = useRouter();
 
-  if (logInError && logInError === "CredentialsSignin") {
-    formState.errors = { email: "Invalid email or password" };
-  }
+  const mergedErrors = useMemo(() => {
+    if (logInError === "CredentialsSignin") {
+      return { ...formState.errors, email: "Invalid email or password" };
+    }
+    return formState.errors;
+  }, [formState.errors, logInError]);
 
   useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/quizz");
+    }
+
     if (formState?.success) {
       signIn("credentials", {
         email: formState.credentials?.email,
@@ -34,7 +42,7 @@ export default function LoginForm() {
     if(formState?.errors){
       setProcessing(false);
     }
-  }, [formState]);
+  }, [formState, router, status]);
 
   return (
     <Panel className="fixed w-[30%] top-[50%] translate-y-[-50%]">
@@ -65,11 +73,14 @@ export default function LoginForm() {
             className="mb-3"
           />
         </div>
-        {errors && Object.keys(errors).length > 0 && (<ul>
-          {Object.keys(errors).map((error) => (
-            <li key={error}>{formState.errors?.[error as keyof typeof formState.errors]}</li>
-          ))}
-        </ul>)}
+        {mergedErrors && Object.keys(mergedErrors).length > 0 && (
+          <ul data-testid="error-list" className="text-red-500 mb-3">
+            {Object.entries(mergedErrors).map(([field, message]) => (
+              console.log(mergedErrors, field, message, "ERRORS"),
+              <li key={field}>{message}</li>
+            ))}
+          </ul>
+        )}
         <div>
           <Button 
             disabled={processing}

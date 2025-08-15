@@ -1,9 +1,7 @@
-// import SignUpForm from "@/components/ui/SignUpForm";
-import LoginForm from "@/components/ui/LoginForm";
-
+import LoginFormWrapper from "@/components/ui/LoginFormWraper";
 export default function Home() {
 
   return (
-    <LoginForm/>
+    <LoginFormWrapper />
   );
 }
