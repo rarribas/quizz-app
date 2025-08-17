@@ -1,8 +1,6 @@
 'use server'
 import { createUser } from "@/lib/user";
-import { signIn } from "next-auth/react";
 import { hashUserPassword } from "@/lib/hash";
-// import { redirect } from "next/navigation";
 
 type ErrorsObject = {
   email?: string;
@@ -18,36 +16,40 @@ export type SignupFormState = {
   success?: boolean,
 };
 
+function validateCredetentials(email: string, password:string):ErrorsObject{
+  const errors = {} as ErrorsObject;
+  if (!email.includes('@')) {
+    errors.email = 'Please enter a valid email address';
+  }
+
+  if (password.trim().length < 8) {
+    errors.password = 'Password must be at least 8 characters long';
+  }
+
+  return errors;
+}
+
 export async function signup(
   prevState: SignupFormState,
   formData: FormData
 ): Promise<SignupFormState> {
 
-  const rawEmail = formData.get('email');
-  const rawPassword = formData.get('password')
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-  const errors = {} as ErrorsObject;
-
-  if (typeof rawEmail !== 'string' || !rawEmail.includes('@')) {
-    errors.email = 'Please enter a valid email address';
-  }
-
-  if (typeof rawPassword !== 'string' || rawPassword.trim().length < 8) {
-    errors.password = 'Password must be at least 8 characters long';
-  }
+  const errors = validateCredetentials(email, password);
 
   if (Object.keys(errors).length > 0) {
     return { errors };
   }
 
-  const email = rawEmail as string;
-  const password = hashUserPassword(rawPassword as string);
+  const hashedPassword = hashUserPassword(password);
 
   try {
-    await createUser(email, password);
+    await createUser(email, hashedPassword);
     return {
       success: true,
-      credentials: { email, password: rawPassword as string}
+      credentials: { email, password: password}
     }
   } catch (err: unknown) {
     if (
@@ -76,25 +78,13 @@ export async function login(
   formData: FormData
 ): Promise<SignupFormState> {
 
-  const rawEmail = formData.get('email');
-  const rawPassword = formData.get('password')
-
-  const errors = {} as ErrorsObject;
-
-  if (typeof rawEmail !== 'string' || !rawEmail.includes('@')) {
-    errors.email = 'Please enter a valid email address';
-  }
-
-  if (typeof rawPassword !== 'string' || rawPassword.trim().length < 8) {
-    errors.password = 'Password must be at least 8 characters long';
-  }
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  const errors = validateCredetentials(email, password);
 
   if (Object.keys(errors).length > 0) {
     return { errors };
   }
-
-  const email = rawEmail as string;
-  const password = rawPassword as string;
 
   return {
     success: true,

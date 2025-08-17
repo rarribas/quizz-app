@@ -1,8 +1,10 @@
-import SignUpFormWrapper from "@/components/ui/SignUpFormWraper";
-
+import WithAuth from "@/components/ui/WithAuth";
+import SignUpForm from "@/components/ui/SignUpForm";
 export default function Home() {
 
   return (
-    <SignUpFormWrapper/>
+    <WithAuth>
+      <SignUpForm />
+    </WithAuth>
   );
 }

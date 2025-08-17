@@ -1,11 +1,11 @@
 'use client';
-import SignUpForm from "./SignUpForm";
+
 import { SessionProvider } from "next-auth/react";
-export default function Home() {
+export default function WithAuth({ children }: { children: React.ReactNode  }) {
 
   return (
     <SessionProvider>
-      <SignUpForm />
+      {children}
     </SessionProvider>
   );
 }

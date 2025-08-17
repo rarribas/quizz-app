@@ -1,7 +1,10 @@
-import LoginFormWrapper from "@/components/ui/LoginFormWraper";
-export default function Home() {
+import LoginForm from "@/components/ui/LoginForm";
+import WithAuth from "@/components/ui/WithAuth";
 
+export default function Home() {
   return (
-    <LoginFormWrapper />
+    <WithAuth>
+      <LoginForm />
+    </WithAuth>
   );
 }

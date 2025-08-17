@@ -76,7 +76,6 @@ export default function LoginForm() {
         {mergedErrors && Object.keys(mergedErrors).length > 0 && (
           <ul data-testid="error-list" className="text-red-500 mb-3">
             {Object.entries(mergedErrors).map(([field, message]) => (
-              console.log(mergedErrors, field, message, "ERRORS"),
               <li key={field}>{message}</li>
             ))}
           </ul>
