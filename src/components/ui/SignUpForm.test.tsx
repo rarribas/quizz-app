@@ -1,12 +1,12 @@
 import { render, fireEvent, waitFor } from "@testing-library/react";
-import LoginForm from "./LoginForm";
-import { login } from "@/app/actions/auth-actions";
+import SignUpForm from "./SignUpForm";
+import { signup } from "@/app/actions/auth-actions";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
 
 jest.mock("@/app/actions/auth-actions", () => ({
-  login: jest.fn(),
+  signup: jest.fn(),
 }));
 
 const mockReplace = jest.fn();
@@ -27,18 +27,18 @@ jest.mock("next-auth/react", () => ({
   })),
 }));
 
-describe("LoginForm", () => {
+describe("SignUpForm", () => {
   it("shows error if missing email or password", async() => {
-    (login as jest.Mock).mockImplementation(async () => ({
+    (signup as jest.Mock).mockImplementation(async () => ({
       errors: {
         email: "Please enter a valid email address",
         password: "Password must be at least 8 characters long",
       },
     }));
-    const { getByText, getByTestId } = render(<LoginForm />);
+    const { getByText, getByTestId } = render(<SignUpForm />);
 
-    const loginButton  = getByText("Login");
-    fireEvent.click(loginButton);
+    const signupButton  = getByText("Submit");
+    fireEvent.click(signupButton);
 
     await waitFor(() => {
       expect(getByTestId("error-list")).toBeInTheDocument();
@@ -48,36 +48,37 @@ describe("LoginForm", () => {
   });
 
   it("Disable controls and show processing when click submit", async () => {
-    (login as jest.Mock).mockResolvedValue({
+    (signup as jest.Mock).mockResolvedValue({
       success: true,
       credentials: { email: "test@test.com", password: "12345678" },
     });
 
-    const { getByTestId, getByText, getByLabelText } = render(<LoginForm />);
-    const loginForm = getByTestId("login-form");
+    const { getByTestId, getByText, getByLabelText } = render(<SignUpForm />);
+    const signUpForm = getByTestId("submit-form");
 
-    fireEvent.submit(loginForm);
+    fireEvent.submit(signUpForm);
 
     await waitFor(() => {
+      // button should be disabled
       expect(getByLabelText(/password/i)).toBeDisabled();
       expect(getByLabelText(/email/i)).toBeDisabled();
       expect(getByText("Processing ...")).toBeInTheDocument();
-      expect(getByTestId("button-login")).toBeDisabled();
+      expect(getByTestId("button-signup")).toBeDisabled();
     });
   });
 
-  it("redirects to /quizz on successful login", async () => {
-    (login as jest.Mock).mockResolvedValue({
+  it("redirects to /quizz on successful signup", async () => {
+    (signup as jest.Mock).mockResolvedValue({
       success: true,
       credentials: { email: "test@test.com", password: "12345678" },
     });
 
     (signIn as jest.Mock).mockResolvedValue({ ok: true });
 
-    const { getByText } = render(<LoginForm />);
+    const { getByText } = render(<SignUpForm />);
 
-    const loginButton = getByText("Login");
-    fireEvent.click(loginButton);
+    const signupButton = getByText("Submit");
+    fireEvent.click(signupButton);
 
     await waitFor(() => {
       expect(signIn).toHaveBeenCalledWith("credentials", {

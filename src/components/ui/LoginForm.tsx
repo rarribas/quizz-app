@@ -47,12 +47,18 @@ export default function LoginForm() {
   return (
     <Panel className="fixed w-[30%] top-[50%] translate-y-[-50%]">
       <Header title="Welcome Back!" desc="Sign in to continue your quizz journey"/>
-      <form action={(formData) => {
-        setProcessing(true);
-        formAction(formData);
+      <form data-testid="login-form"
+        onSubmit={(e) => {
+          e.preventDefault(); 
+          setProcessing(true);
+          formAction(new FormData(e.currentTarget));
       }}>
         <div>
-          <Label className="mb-3">Email:</Label>
+          <Label 
+            className="mb-3" 
+            htmlFor="email">
+              Email:
+          </Label>
           <Input 
             type='email' 
             name='email'
@@ -63,7 +69,11 @@ export default function LoginForm() {
           />
         </div>
         <div>
-          <Label className="mb-3">Password:</Label>
+          <Label 
+            className="mb-3" 
+            htmlFor="password">
+              Password:
+          </Label>
           <Input 
             type='password'
             name='password'
@@ -82,6 +92,7 @@ export default function LoginForm() {
         )}
         <div>
           <Button 
+            data-testid="button-login" 
             disabled={processing}
             type='submit'>
               {processing ? "Processing ..." : "Login"}
