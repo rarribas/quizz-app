@@ -1,4 +1,4 @@
-import WithAuth from "@/components/ui/WithAuth";
+import WithAuth from "@/components/WithAuth";
 import SignUpForm from "@/components/ui/SignUpForm";
 
 export default function SignUpPage() {
