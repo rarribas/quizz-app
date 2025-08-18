@@ -8,6 +8,7 @@ import Header from "@/components/ui/header";
 import { signup } from "@/app/actions/auth-actions";
 import { signIn, useSession } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
+import {MailIcon, LockIcon} from "lucide-react";
 
 export default function SignUpForm() {
   const [formState, formAction] = useActionState(signup, {errors:{}})
@@ -58,8 +59,9 @@ if (status === "authenticated") return null;
         }}>
         <div>
           <Label 
-            className="mb-3" 
+            className="mb-3 font-semibold" 
             htmlFor="email">
+              <MailIcon size={14} className="inline" />
               Email:
           </Label>
           <Input 
@@ -73,8 +75,9 @@ if (status === "authenticated") return null;
         </div>
         <div>
           <Label 
-            className="mb-3" 
+            className="mb-3 font-semibold" 
             htmlFor="password">
+              <LockIcon size={14} className="inline" />
               Password:
           </Label>
           <Input 

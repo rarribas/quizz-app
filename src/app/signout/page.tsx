@@ -6,16 +6,18 @@ import { signOut } from "next-auth/react";
 
 export default function SignOutPage() {
   return (
-    <Panel className="fixed w-[30%] top-[50%] translate-y-[-50%]">
-      <Header title="Sign Out!" desc="Click button to sign out" />
-      <div className="mt-4 flex justify-center">
-        <Button
-          variant="destructive"
-          onClick={() => signOut({ callbackUrl: "/" })}
-        >
-          Sign Out
-        </Button>
-      </div>
-    </Panel>
+    <div className=" w-screen h-screen bg-red-50">
+      <Panel className="fixed w-[30%] top-[50%] translate-y-[-50%]">
+        <Header title="Good Bye!" desc="Click to sign out from the quizz. See you Soon!" />
+        <div className="mt-4 flex justify-center">
+          <Button
+            variant="destructive"
+            onClick={() => signOut({ callbackUrl: "/" })}
+          >
+            Sign Out
+          </Button>
+        </div>
+      </Panel>
+    </div>
   );
 }

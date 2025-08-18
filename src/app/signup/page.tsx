@@ -3,8 +3,10 @@ import SignUpForm from "@/components/ui/SignUpForm";
 
 export default function SignUpPage() {
   return (
-    <WithAuth>
-      <SignUpForm />
-    </WithAuth>
+    <div className=" w-screen h-screen bg-[#f0fdf4]">
+      <WithAuth>
+        <SignUpForm />
+      </WithAuth>
+    </div>
   );
 }

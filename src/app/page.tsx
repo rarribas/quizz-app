@@ -3,8 +3,10 @@ import WithAuth from "@/components/WithAuth";
 
 export default function Home() {
   return (
-    <WithAuth>
-      <LoginForm />
-    </WithAuth>
+    <div className=" w-screen h-screen bg-[#e0e7ff]">
+      <WithAuth>
+        <LoginForm />
+      </WithAuth>
+    </div>
   );
 }

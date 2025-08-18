@@ -8,6 +8,7 @@ import Header from "@/components/ui/header";
 import { login } from "@/app/actions/auth-actions";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+import {TrophyIcon, MailIcon, LockIcon} from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 export default function LoginForm() {
@@ -46,7 +47,11 @@ export default function LoginForm() {
 
   return (
     <Panel className="fixed w-[30%] top-[50%] translate-y-[-50%]">
-      <Header title="Welcome Back!" desc="Sign in to continue your quizz journey"/>
+      <Header 
+        icon={<TrophyIcon size={48} className="bg-blue-500 rounded-full p-2 text-white" />}
+        title="Welcome Back!" 
+        desc="Sign in to continue your quizz journey"
+      />
       <form data-testid="login-form"
         onSubmit={(e) => {
           e.preventDefault(); 
@@ -55,8 +60,9 @@ export default function LoginForm() {
       }}>
         <div>
           <Label 
-            className="mb-3" 
+            className="mb-3 font-semibold" 
             htmlFor="email">
+              <MailIcon size={14} className="inline" />
               Email:
           </Label>
           <Input 
@@ -70,8 +76,9 @@ export default function LoginForm() {
         </div>
         <div>
           <Label 
-            className="mb-3" 
+            className="mb-3 font-semibold" 
             htmlFor="password">
+              <LockIcon size={14} className="inline" />
               Password:
           </Label>
           <Input 
@@ -98,9 +105,9 @@ export default function LoginForm() {
               {processing ? "Processing ..." : "Login"}
           </Button>
         </div>
-        <div className="aling-center mt-4">
+        <div className="flex justify-center mt-2">
           <p className="mt-4 text-sm text-muted-foreground">
-            Don&apos;t have an account? <Link href="/signup" className="text-blue-500 hover:underline">Sign Up</Link>
+            Don&apos;t have an account? <Link href="/signup" className="text-blue-500 hover:underline">Sign Up here</Link>
           </p>
         </div>
       </form>
