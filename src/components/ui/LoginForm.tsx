@@ -10,8 +10,9 @@ import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import {TrophyIcon, MailIcon, LockIcon} from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { WithAuth } from "@/components/WithAuth";
 
-export default function LoginForm() {
+const LoginForm = () => {
   const [formState, formAction] = useActionState(login, {errors:{}})
   const [processing, setProcessing] = useState(false);
   const searchParams = useSearchParams();
@@ -114,3 +115,6 @@ export default function LoginForm() {
     </Panel>
   )
 }
+
+export const RawLoginForm = LoginForm; //For testing
+export default WithAuth(LoginForm);

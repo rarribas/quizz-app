@@ -1,11 +1,14 @@
 'use client';
 
 import { SessionProvider } from "next-auth/react";
-export default function WithAuth({ children }: { children: React.ReactNode  }) {
+import { ComponentType } from "react";
 
-  return (
-    <SessionProvider>
-      {children}
-    </SessionProvider>
-  );
+export function WithAuth<P extends object>(Component: ComponentType<P>) {
+  return function AuthenticatedComponent(props: P) {
+    return (
+      <SessionProvider>
+        <Component {...props} />
+      </SessionProvider>
+    );
+  };
 }

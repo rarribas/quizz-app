@@ -9,8 +9,9 @@ import { signup } from "@/app/actions/auth-actions";
 import { signIn, useSession } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {MailIcon, LockIcon} from "lucide-react";
+import { WithAuth } from "@/components/WithAuth";
 
-export default function SignUpForm() {
+const SignUpForm = () => {
   const [formState, formAction] = useActionState(signup, {errors:{}})
   const [processing, setProcessing] = useState(false);
   const searchParams = useSearchParams();
@@ -108,3 +109,6 @@ if (status === "authenticated") return null;
     </Panel>
   )
 }
+
+export const RawSignUpForm = SignUpForm; //For testing
+export default WithAuth(SignUpForm);

@@ -1,5 +1,5 @@
 import { render, fireEvent, waitFor } from "@testing-library/react";
-import SignUpForm from "./SignUpForm";
+import {RawSignUpForm} from "./SignUpForm";
 import { signup } from "@/app/actions/auth-actions";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
@@ -35,7 +35,7 @@ describe("SignUpForm", () => {
         password: "Password must be at least 8 characters long",
       },
     }));
-    const { getByText, getByTestId } = render(<SignUpForm />);
+    const { getByText, getByTestId } = render(<RawSignUpForm />);
 
     const signupButton  = getByText("Submit");
     fireEvent.click(signupButton);
@@ -53,7 +53,7 @@ describe("SignUpForm", () => {
       credentials: { email: "test@test.com", password: "12345678" },
     });
 
-    const { getByTestId, getByText, getByLabelText } = render(<SignUpForm />);
+    const { getByTestId, getByText, getByLabelText } = render(<RawSignUpForm />);
     const signUpForm = getByTestId("submit-form");
 
     fireEvent.submit(signUpForm);
@@ -75,7 +75,7 @@ describe("SignUpForm", () => {
 
     (signIn as jest.Mock).mockResolvedValue({ ok: true });
 
-    const { getByText } = render(<SignUpForm />);
+    const { getByText } = render(<RawSignUpForm />);
 
     const signupButton = getByText("Submit");
     fireEvent.click(signupButton);
