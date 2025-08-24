@@ -5,8 +5,11 @@ interface QuizzCategoriesI {
   name: string;
 }
 
+type DifficultyType = 'Easy' | 'Medium' | 'Hard';
+
 interface QuizzCategoryState {
   categories: QuizzCategoriesI[],
+  difficulty: DifficultyType[],
   loading: boolean,
   fetchCategories: () => Promise<void>
 }
@@ -15,6 +18,7 @@ const CAT_URL:string = "https://opentdb.com/api_category.php";
 
 export const useQuizzCategoriesStore = create<QuizzCategoryState>((set) => ({
   categories: [],
+  difficulty: ['Easy', 'Medium', 'Hard'],
   loading: false,
   fetchCategories: async () => {
     set({ loading: true });
