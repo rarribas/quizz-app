@@ -3,6 +3,7 @@ import React, {useActionState, useEffect, useState, useMemo} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Loading from "./Loading";
 import Panel from "@/components/ui/panel";
 import Header from "@/components/ui/header";
 import { signup } from "@/app/actions/auth-actions";
@@ -45,8 +46,8 @@ const SignUpForm = () => {
   }, [formState, router, status]);
 
 
-if (status === "loading") return null;
-if (status === "authenticated") return null;
+  if (status === "loading") return <Loading/>;
+  if (status === "authenticated") return null;
 
   return (
     <Panel className="fixed w-[30%] top-[50%] translate-y-[-50%]">
