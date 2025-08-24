@@ -1,3 +1,4 @@
+import QuizzConfigForm from "@/components/ui/QuizzConfigForm"
 export default function QuizzPage(){
-  return <h1>Quizz Start Here</h1>
+  return <QuizzConfigForm/>
 }
