@@ -37,3 +37,5 @@ export const useQuizzCategoriesStore = create<QuizzCategoryState>((set) => ({
     }
   },
 }));
+
+export type {DifficultyKey};

@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/select";
 import { ChevronRight } from "lucide-react";
 import { useQuizzCategoriesStore, DifficultyKey } from "@/store/useQuizzCategoriesStore";
+import { useQuizzConfigStore } from "@/store/useQuizzConfigStore";
 import { useEffect, useState } from "react";
 
 type ErrorField = 'category' | 'difficulty';
 
 export default function QuizzConfigForm(){
   const {categories, difficulty, loading, fetchCategories} = useQuizzCategoriesStore();
+  const {setConfiguration} = useQuizzConfigStore();
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<DifficultyKey | "">("");
   const [errors, setErrors] = useState<ErrorField[]>([]);
@@ -38,9 +40,13 @@ export default function QuizzConfigForm(){
     if (!selectedCategory) newErrors.push('category');
     if (!selectedDifficulty) newErrors.push('difficulty');
 
-    setErrors(newErrors);
-    return;
-    // TODO - Implement this
+    return setErrors(newErrors);
+    
+    setConfiguration({
+      category: selectedCategory, 
+      difficulty: selectedDifficulty, 
+      done: true
+    })
   }
 
   const selectedCategoryObj = categories.find(cat => cat.id === selectedCategory);
