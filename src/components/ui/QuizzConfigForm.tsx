@@ -17,21 +17,27 @@ import { ChevronRight } from "lucide-react";
 import { useQuizzCategoriesStore, DifficultyKey } from "@/store/useQuizzCategoriesStore";
 import { useQuizzConfigStore } from "@/store/useQuizzConfigStore";
 import { useEffect, useState } from "react";
-
+import { useRouter } from "next/navigation";
 type ErrorField = 'category' | 'difficulty';
 
 export default function QuizzConfigForm(){
   const {categories, difficulty, loading, fetchCategories} = useQuizzCategoriesStore();
-  const {setConfiguration} = useQuizzConfigStore();
+  const {configuration, setConfiguration} = useQuizzConfigStore();
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<DifficultyKey | "">("");
   const [errors, setErrors] = useState<ErrorField[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
+    if(configuration?.done){
+       return router.replace("/quizz/start");
+    }
+
     fetchCategories()
-  },[fetchCategories]);
+  },[fetchCategories, configuration, router]);
 
   if(loading) return <Loading/>
+  if(configuration?.done) return null; 
 
   const onFormSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
@@ -40,7 +46,9 @@ export default function QuizzConfigForm(){
     if (!selectedCategory) newErrors.push('category');
     if (!selectedDifficulty) newErrors.push('difficulty');
 
-    return setErrors(newErrors);
+    if(newErrors.length > 0){
+      return setErrors(newErrors);
+    }
     
     setConfiguration({
       category: selectedCategory, 

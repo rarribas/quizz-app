@@ -9,5 +9,5 @@ export default withAuth({
 });
 
 export const config = {
-  matcher: ["/quizz", "/signout"],
+  matcher: ["/quizz", "/quizz/:path*", "/signout"],
 };
