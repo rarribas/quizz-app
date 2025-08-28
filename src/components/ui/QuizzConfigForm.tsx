@@ -1,5 +1,5 @@
 'use client'
-
+import { startTransition } from "react";
 import Panel from "./panel";
 import Header from "./header";
 import QuizzDetails from "./QuizzDetails";
@@ -50,10 +50,12 @@ export default function QuizzConfigForm(){
       return setErrors(newErrors);
     }
     
-    setConfiguration({
-      category: selectedCategory, 
-      difficulty: selectedDifficulty, 
-      done: true
+    startTransition(() => {
+      setConfiguration({
+        category: selectedCategory, 
+        difficulty: selectedDifficulty, 
+        done: true
+      })
     })
   }
 
