@@ -3,7 +3,6 @@
 import { useQuizzConfigStore } from "@/store/useQuizzConfigStore"
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { config } from "process";
 
 export default function QuizzStart(){
   const {configuration} = useQuizzConfigStore();

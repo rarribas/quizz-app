@@ -1,0 +1,3 @@
+describe("Quizz Configuration Form", () => {
+  
+});

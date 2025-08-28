@@ -57,6 +57,22 @@ export default function QuizzConfigForm(){
     })
   }
 
+  const onChangeDifficulty = (value:DifficultyKey) =>{
+    if(errors.length > 0 && errors.includes('difficulty')){
+      setErrors([...errors.filter(item => item !== 'difficulty')])
+    }
+
+    setSelectedDifficulty(value)
+  }
+
+  const onChangeCategory = (value:string) =>{
+    if(errors.length > 0 && errors.includes('category')){
+      setErrors([...errors.filter(item => item !== 'category')])
+    }
+
+    setSelectedCategory(value)
+  }
+
   const selectedCategoryObj = categories.find(cat => cat.id === selectedCategory);
 
   return(
@@ -80,7 +96,10 @@ export default function QuizzConfigForm(){
               htmlFor="category">
                 Category:
             </Label>
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <Select 
+              value={selectedCategory} 
+              onValueChange={onChangeCategory}
+            >
               <SelectTrigger className="w-full mb-3">
                 <SelectValue placeholder="Insert Category" />
               </SelectTrigger>
@@ -102,7 +121,7 @@ export default function QuizzConfigForm(){
             </Label>
             <Select 
               value={selectedDifficulty}
-              onValueChange={(value) => setSelectedDifficulty(value as DifficultyKey)}
+              onValueChange={onChangeDifficulty}
             >
               <SelectTrigger className="w-[100%] mb-3">
                 <SelectValue id="difficulty" placeholder="Select Difficulty"/>
