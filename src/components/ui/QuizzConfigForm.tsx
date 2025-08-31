@@ -25,7 +25,10 @@ export default function QuizzConfigForm(){
   const {configuration, setConfiguration} = useQuizzConfigStore();
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<DifficultyKey | "">("");
-  const [errors, setErrors] = useState<ErrorField[]>([]);
+  const [errors, setErrors] = useState<Record<ErrorField,string>>({
+    category: '',
+    difficulty: ''
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -41,12 +44,20 @@ export default function QuizzConfigForm(){
 
   const onFormSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
-    const newErrors: ErrorField[] = [];
+    const newErrors: Record<ErrorField,string> = {
+      category: '',
+      difficulty: '',  
+    };
 
-    if (!selectedCategory) newErrors.push('category');
-    if (!selectedDifficulty) newErrors.push('difficulty');
+    if (!selectedCategory){
+      newErrors.category = "Please select a category";
+    }
 
-    if(newErrors.length > 0){
+    if (!selectedDifficulty){
+      newErrors.difficulty = "Please select difficulty";
+    }
+
+    if(newErrors.category || newErrors.difficulty){
       return setErrors(newErrors);
     }
     
@@ -60,16 +71,16 @@ export default function QuizzConfigForm(){
   }
 
   const onChangeDifficulty = (value:DifficultyKey) =>{
-    if(errors.length > 0 && errors.includes('difficulty')){
-      setErrors([...errors.filter(item => item !== 'difficulty')])
+    if(errors.difficulty){
+      setErrors({...errors, difficulty: ''})
     }
 
     setSelectedDifficulty(value)
   }
 
   const onChangeCategory = (value:string) =>{
-    if(errors.length > 0 && errors.includes('category')){
-      setErrors([...errors.filter(item => item !== 'category')])
+    if(errors.category){
+      setErrors({...errors, category: ''})
     }
 
     setSelectedCategory(value)
@@ -91,7 +102,10 @@ export default function QuizzConfigForm(){
           </h5>
           <p>Select you preferred category and difficulty. You&apos;ll have 2 minutes to complete 10 multiple choice questions.</p>
         </header>
-        <form onSubmit={onFormSubmit}>
+        <form 
+          onSubmit={onFormSubmit}
+          data-testid="quizz-config-form"
+        >
           <div>
             <Label 
               className="mb-3 font-semibold" 
@@ -113,7 +127,7 @@ export default function QuizzConfigForm(){
                 ))}
               </SelectContent>
             </Select>
-            {errors.includes('category') && <p className="mb-3 text-red-400">Please introduce a category</p>}
+            {errors.category && <p className="mb-3 text-red-400">{errors.category}</p>}
           </div>
           <div>
             <Label 
@@ -134,7 +148,7 @@ export default function QuizzConfigForm(){
                 })}
               </SelectContent>
             </Select>
-            {errors.includes('difficulty') && <p className="mb-3 text-red-400">Please introduce a difficulty</p>}
+            {errors.difficulty && <p className="mb-3 text-red-400">{errors.difficulty}</p>}
           </div>
           <QuizzDetails/>
           <div>
