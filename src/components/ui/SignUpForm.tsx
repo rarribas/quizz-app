@@ -3,13 +3,14 @@ import React, {useActionState, useEffect, useMemo} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 import Loading from "./Loading";
 import Panel from "@/components/ui/panel";
 import Header from "@/components/ui/header";
 import { signup } from "@/app/actions/auth-actions";
 import { signIn, useSession } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
-import {MailIcon, LockIcon} from "lucide-react";
+import {MailIcon, LockIcon, UserIcon} from "lucide-react";
 import { WithAuth } from "@/components/WithAuth";
 
 const SignUpForm = () => {
@@ -47,7 +48,11 @@ const SignUpForm = () => {
 
   return (
     <Panel className="fixed w-[30%] top-[50%] translate-y-[-50%]">
-      <Header title="Welcome!" desc="Please create your account."/>
+      <Header 
+        icon={<UserIcon size={48} className="bg-green-500 rounded-full p-2 text-white" />}
+        title="Join The Quizz!" 
+        desc="Create your account and get started"
+      />
       <form
         data-testid="submit-form"
         action={formAction}
@@ -98,6 +103,11 @@ const SignUpForm = () => {
             type='submit'>
               {isPending ? "Processing ..." : "Submit"}
           </Button>
+        </div>
+        <div className="flex justify-center mt-2">
+          <p className="mt-4 text-sm text-muted-foreground">
+            Already have an account? <Link href="/" className="text-blue-500 hover:underline">Sign In here</Link>
+          </p>
         </div>
       </form>
     </Panel>
