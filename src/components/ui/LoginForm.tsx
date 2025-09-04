@@ -1,5 +1,5 @@
 'use client'
-import React, {useActionState, useEffect, useState, useMemo} from "react";
+import React, {useActionState, useEffect, useMemo} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,8 +14,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { WithAuth } from "@/components/WithAuth";
 
 const LoginForm = () => {
-  const [formState, formAction] = useActionState(login, {errors:{}})
-  const [processing, setProcessing] = useState(false);
+  const [formState, formAction, isPending] = useActionState(login, {errors:{}})
   const searchParams = useSearchParams();
   const logInError = searchParams.get("error");
   const { status } = useSession();
@@ -41,10 +40,6 @@ const LoginForm = () => {
         callbackUrl: "/quizz",
       })
     }
-
-    if(formState?.errors){
-      setProcessing(false);
-    }
   }, [formState, router, status]);
 
   if (status === "loading") return <Loading/>;
@@ -57,12 +52,10 @@ const LoginForm = () => {
         title="Welcome Back!" 
         desc="Sign in to continue your quizz journey"
       />
-      <form data-testid="login-form"
-        onSubmit={(e) => {
-          e.preventDefault(); 
-          setProcessing(true);
-          formAction(new FormData(e.currentTarget));
-      }}>
+      <form 
+        data-testid="login-form"
+        action={formAction}
+      >
         <div>
           <Label 
             className="mb-3 font-semibold" 
@@ -75,7 +68,7 @@ const LoginForm = () => {
             name='email'
             id='email'
             placeholder="Insert your email"
-            disabled={processing}
+            disabled={isPending}
             className="mb-3"
           />
         </div>
@@ -91,7 +84,7 @@ const LoginForm = () => {
             name='password'
             id='password' 
             placeholder="Insert your password"
-            disabled={processing}
+            disabled={isPending}
             className="mb-3"
           />
         </div>
@@ -105,9 +98,9 @@ const LoginForm = () => {
         <div>
           <Button 
             data-testid="button-login" 
-            disabled={processing}
+            disabled={isPending}
             type='submit'>
-              {processing ? "Processing ..." : "Login"}
+              {isPending ? "Processing ..." : "Login"}
           </Button>
         </div>
         <div className="flex justify-center mt-2">

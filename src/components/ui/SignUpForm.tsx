@@ -1,5 +1,5 @@
 'use client'
-import React, {useActionState, useEffect, useState, useMemo} from "react";
+import React, {useActionState, useEffect, useMemo} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,8 +13,7 @@ import {MailIcon, LockIcon} from "lucide-react";
 import { WithAuth } from "@/components/WithAuth";
 
 const SignUpForm = () => {
-  const [formState, formAction] = useActionState(signup, {errors:{}})
-  const [processing, setProcessing] = useState(false);
+  const [formState, formAction, isPending] = useActionState(signup, {errors:{}})
   const searchParams = useSearchParams();
   const logInError = searchParams.get("error");
   const { status } = useSession();
@@ -40,9 +39,6 @@ const SignUpForm = () => {
       })
     }
 
-    if(formState?.errors){
-      setProcessing(false);
-    }
   }, [formState, router, status]);
 
 
@@ -54,11 +50,8 @@ const SignUpForm = () => {
       <Header title="Welcome!" desc="Please create your account."/>
       <form
         data-testid="submit-form"
-        onSubmit={(e) => {
-          e.preventDefault(); 
-          setProcessing(true);
-          formAction(new FormData(e.currentTarget));
-        }}>
+        action={formAction}
+      >
         <div>
           <Label 
             className="mb-3 font-semibold" 
@@ -71,7 +64,7 @@ const SignUpForm = () => {
             name='email'
             id='email'
             placeholder="Insert your email"
-            disabled={processing}
+            disabled={isPending}
             className="mb-3"
           />
         </div>
@@ -87,7 +80,7 @@ const SignUpForm = () => {
             name='password'
             id='password' 
             placeholder="Insert your password"
-            disabled={processing}
+            disabled={isPending}
             className="mb-3"
           />
         </div>
@@ -101,9 +94,9 @@ const SignUpForm = () => {
         <div>
           <Button 
             data-testid="button-signup" 
-            disabled={processing}
+            disabled={isPending}
             type='submit'>
-              {processing ? "Processing ..." : "Submit"}
+              {isPending ? "Processing ..." : "Submit"}
           </Button>
         </div>
       </form>
