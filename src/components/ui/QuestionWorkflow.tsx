@@ -40,7 +40,11 @@ export default function QuestionWorkflow(){
   if(!configuration || !configuration.done) return null;
   if(loading) return <Loading/>
 
-  console.log(questions, "QUESTIONS HERE");
+  // TODO: Need to build error page.
+  // When refetching the API many times in a row I get no questions in the response
+  if(questions.length === 0){
+    return <p>TODO: Something went wrong</p>
+  }
   
   return (
     <QuestionPanel questions={questions}/>
