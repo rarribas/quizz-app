@@ -19,6 +19,7 @@ interface QuestionI {
 export default function QuestionPanel({questions}:{ questions: QuestionI[]}){
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [answers, setAnswers] = useState<string[]>([])
+  const [itemSelected, setItemSelected] = useState<string>('')
 
   const suffleArray = <T,>(array: T[]): T[] => {
     return array
@@ -35,7 +36,10 @@ export default function QuestionPanel({questions}:{ questions: QuestionI[]}){
       setAnswers(shuffledAnswers);
   }, [questionIndex, questions]);
 
-  console.log(questions);
+  const setAsSelectedIfNotSelected = (answer:string) =>{
+    if(itemSelected !== '' ) return;
+    setItemSelected(answer);
+  }
 
   return (
     <div className="flex flex-col w-3/5 mx-auto my-0">
@@ -47,7 +51,26 @@ export default function QuestionPanel({questions}:{ questions: QuestionI[]}){
         
         <h2 className="text-xl font-bold">{he.decode(questions[questionIndex].question)}</h2>
         {answers.map((answer) => {
-          return <div className="p-2 text-center border my-4 rounded" key={answer}>
+          let answerClasses = "p-2 text-center border my-4 rounded";
+          const isCorrect = questions[questionIndex].correct_answer === answer;
+          const isSelected = answer === itemSelected;
+
+          console.log(itemSelected, itemSelected === '', "HELLO")
+
+          if(itemSelected === ''){
+            answerClasses += " cursor-pointer";
+          }
+
+          if(itemSelected && isCorrect){
+            answerClasses += " bg-green-300 text-white";
+          }else if(isSelected && !isCorrect){
+            answerClasses += " bg-red-300 text-white";
+          }
+
+          return <div 
+            className={answerClasses} 
+            key={answer}
+            onClick={() => setAsSelectedIfNotSelected(answer)}>
             <p>{he.decode(answer)}</p>
           </div>
         })}
@@ -59,7 +82,11 @@ export default function QuestionPanel({questions}:{ questions: QuestionI[]}){
         >
           Previous
         </Button>
-        <Button size="sm">Select an answer to continue</Button>
+        {itemSelected === '' ? 
+          <Button size="sm" disabled={true}>Select an answer to continue</Button> : 
+          <Button size="sm">Next</Button>
+        }
+        
       </div>
     </div>
   )

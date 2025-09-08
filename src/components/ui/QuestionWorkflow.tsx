@@ -42,7 +42,8 @@ export default function QuestionWorkflow(){
 
   // TODO: Need to build error page.
   // When refetching the API many times in a row I get no questions in the response
-  if(questions.length === 0){
+  console.log(questions);
+  if(!questions){
     return <p>TODO: Something went wrong</p>
   }
   
