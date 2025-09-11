@@ -20,6 +20,7 @@ export default function QuestionPanel({questions}:{ questions: QuestionI[]}){
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [answers, setAnswers] = useState<string[]>([])
   const [itemSelected, setItemSelected] = useState<string>('')
+  const [points, setPoints] = useState<number>(0);
 
   const suffleArray = <T,>(array: T[]): T[] => {
     return array
@@ -41,6 +42,13 @@ export default function QuestionPanel({questions}:{ questions: QuestionI[]}){
     setItemSelected(answer);
   }
 
+  const onNextButtonClick = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+    ev.preventDefault();
+
+    setQuestionIndex(prevIndex => prevIndex + 1);
+    setItemSelected('');
+  }
+
   return (
     <div className="flex flex-col w-3/5 mx-auto my-0">
        <Panel className="w-full">
@@ -55,14 +63,13 @@ export default function QuestionPanel({questions}:{ questions: QuestionI[]}){
           const isCorrect = questions[questionIndex].correct_answer === answer;
           const isSelected = answer === itemSelected;
 
-          console.log(itemSelected, itemSelected === '', "HELLO")
-
           if(itemSelected === ''){
             answerClasses += " cursor-pointer";
           }
 
           if(itemSelected && isCorrect){
             answerClasses += " bg-green-300 text-white";
+            setPoints((prev) => prev + 1);
           }else if(isSelected && !isCorrect){
             answerClasses += " bg-red-300 text-white";
           }
@@ -82,9 +89,10 @@ export default function QuestionPanel({questions}:{ questions: QuestionI[]}){
         >
           Previous
         </Button>
+        {/* TODO: When we arrive to the end of the test, the button should bring you to a different page */}
         {itemSelected === '' ? 
           <Button size="sm" disabled={true}>Select an answer to continue</Button> : 
-          <Button size="sm">Next</Button>
+          <Button size="sm" disabled={questionIndex >= 9} onClick={onNextButtonClick}>Next</Button>
         }
         
       </div>
