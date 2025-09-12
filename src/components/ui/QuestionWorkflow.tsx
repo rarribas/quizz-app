@@ -6,12 +6,17 @@ import { useRouter } from "next/navigation";
 import Loading from "./Loading";
 import QuestionPanel, {QuestionI} from "./QuestionPanel";
 import { getToken } from "@/lib/quizz";
+import { Button } from "./button";
+import {Progress} from "./progress";
 
 export default function QuestionWorkflow(){
   const {configuration} = useQuizzConfigStore();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [questions, setQuestions] = useState<QuestionI[]>([]);
+  const [questionIndex, setQuestionIndex] = useState<number>(0);
+  const [nextEnabled, setNextEnabled] = useState<boolean>(false);
+  const [points, setPoints] = useState<number>(0);
   const fetchedRef = useRef(false);
 
   useEffect(() => {
@@ -57,12 +62,47 @@ export default function QuestionWorkflow(){
 
   // TODO: Need to build error page.
   // When refetching the API many times in a row I get no questions in the response
-  console.log(questions);
   if(!questions){
     return <p>TODO: Something went wrong</p>
   }
+
+  const afterItemSelected = (hasCorrectAnswer:boolean) =>{
+    setNextEnabled(true);
+    if(hasCorrectAnswer){
+      setPoints((prev) => prev + 1);
+    }
+  }
+
+  const onNextButtonClick = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+    ev.preventDefault();
+
+    setQuestionIndex(prevIndex => prevIndex + 1);
+    setNextEnabled(false);
+  }
   
+  const progress = ((questionIndex + 1) / questions.length) * 100;
+
+  console.log("POINTS", points);
+  console.log("PROGRESS", progress);
   return (
-    <QuestionPanel questions={questions}/>
+    <div className="flex flex-col w-3/5 mx-auto my-0">
+      <Progress className="mb-6" value={progress} />
+      <QuestionPanel 
+        question={questions[questionIndex]} 
+        afterItemSelected={afterItemSelected} 
+      />
+      <div className="flex m-4 justify-between">
+        <Button 
+          size="sm"
+          disabled={questionIndex === 0}
+        >
+          Previous
+        </Button>
+        {nextEnabled ?  
+          <Button size="sm" disabled={questionIndex >= 9} onClick={onNextButtonClick}>Next</Button> 
+          : <Button size="sm" disabled={true}>Select an answer to continue</Button>}
+       
+      </div>
+    </div>
   )
 }
