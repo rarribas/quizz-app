@@ -84,6 +84,7 @@ export default function QuestionWorkflow(){
 
   console.log("POINTS", points);
   console.log("PROGRESS", progress);
+  
   return (
     <div className="flex flex-col w-3/5 mx-auto my-0">
       <Progress className="mb-6" value={progress} />
