@@ -40,3 +40,5 @@ export const useQuizzStateStore = create<QuizzStateI>((set) => ({
     ]),
   })),
 }))
+
+export type {QuestionI};
