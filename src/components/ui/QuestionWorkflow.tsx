@@ -4,10 +4,11 @@ import { useQuizzConfigStore } from "@/store/useQuizzConfigStore"
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Loading from "./Loading";
-import QuestionPanel, {QuestionI} from "./QuestionPanel";
+import QuestionPanel from "./QuestionPanel";
 import { getToken } from "@/lib/quizz";
 import { Button } from "./button";
 import {Progress} from "./progress";
+import { useQuizzStateStore, type QuestionI } from "@/store/useQuizzStateStore";
 
 export default function QuestionWorkflow(){
   const {configuration} = useQuizzConfigStore();
@@ -15,8 +16,7 @@ export default function QuestionWorkflow(){
   const [loading, setLoading] = useState<boolean>(true);
   const [questions, setQuestions] = useState<QuestionI[]>([]);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
-  const [nextEnabled, setNextEnabled] = useState<boolean>(false);
-  const [points, setPoints] = useState<number>(0);
+  const {score, answerSelected} = useQuizzStateStore();
   const fetchedRef = useRef(false);
 
   useEffect(() => {
@@ -66,23 +66,15 @@ export default function QuestionWorkflow(){
     return <p>TODO: Something went wrong</p>
   }
 
-  const afterItemSelected = (hasCorrectAnswer:boolean) =>{
-    setNextEnabled(true);
-    if(hasCorrectAnswer){
-      setPoints((prev) => prev + 1);
-    }
-  }
-
   const onNextButtonClick = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     ev.preventDefault();
 
     setQuestionIndex(prevIndex => prevIndex + 1);
-    setNextEnabled(false);
   }
   
   const progress = ((questionIndex + 1) / questions.length) * 100;
 
-  console.log("POINTS", points);
+  console.log("score", score);
   console.log("PROGRESS", progress);
   
   return (
@@ -90,7 +82,6 @@ export default function QuestionWorkflow(){
       <Progress className="mb-6" value={progress} />
       <QuestionPanel 
         question={questions[questionIndex]} 
-        afterItemSelected={afterItemSelected} 
       />
       <div className="flex m-4 justify-between">
         <Button 
@@ -99,7 +90,7 @@ export default function QuestionWorkflow(){
         >
           Previous
         </Button>
-        {nextEnabled ?  
+        {answerSelected !== '' ?  
           <Button size="sm" disabled={questionIndex >= 9} onClick={onNextButtonClick}>Next</Button> 
           : <Button size="sm" disabled={true}>Select an answer to continue</Button>}
        

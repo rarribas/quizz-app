@@ -1,49 +1,30 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import Panel from "./panel"
 import { Badge } from "./badge"
 import he from "he";
-
-interface QuestionI {
-  type: string,
-  difficulty: string,
-  category: string,
-  question: string,
-  correct_answer: string,
-  incorrect_answers: string[],
-}
+import { useQuizzStateStore, type QuestionI } from "@/store/useQuizzStateStore";
 
 interface QuestionPanelProps {
   question: QuestionI
-  afterItemSelected: (hasCorrectAnswer:boolean) => void
 }
 
-export default function QuestionPanel({question, afterItemSelected}:QuestionPanelProps ) {
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [itemSelected, setItemSelected] = useState<string>('')
-
-  const suffleArray = <T,>(array: T[]): T[] => {
-    return array
-      .map(value => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value);
-  };
+export default function QuestionPanel({question}:QuestionPanelProps ) {
+  const {incrementScore, answers, setAnswers, answerSelected, setAnswerSelected} = useQuizzStateStore();
 
   useEffect(() => {
-      const shuffledAnswers = suffleArray([
-        question.correct_answer,
-        ...question.incorrect_answers,
-      ]);
-      setAnswers(shuffledAnswers);
+      setAnswers(question);
       // Reset selection for new question
-      setItemSelected('');
-  }, [question]);
+      setAnswerSelected('');
+  }, [question, setAnswerSelected, setAnswers]);
 
   const setAsSelectedIfNotSelected = (answer:string) =>{
-    if(itemSelected !== '' ) return;
-    setItemSelected(answer);
-    afterItemSelected(answer === question.correct_answer);
+    if(answerSelected !== '' ) return;
+    setAnswerSelected(answer);
+    if (answer === question.correct_answer) {
+      incrementScore();
+    }
   }
 
   return (
@@ -57,13 +38,13 @@ export default function QuestionPanel({question, afterItemSelected}:QuestionPane
         {answers.map((answer) => {
           let answerClasses = "p-2 text-center border my-4 rounded";
           const isCorrect = question.correct_answer === answer;
-          const isSelected = answer === itemSelected;
+          const isSelected = answer === answerSelected;
 
-          if(itemSelected === ''){
+          if(answerSelected === ''){
             answerClasses += " cursor-pointer";
           }
 
-          if(itemSelected && isCorrect){
+          if(answerSelected && isCorrect){
             answerClasses += " bg-green-300 text-white";
           }else if(isSelected && !isCorrect){
             answerClasses += " bg-red-300 text-white";
@@ -72,12 +53,11 @@ export default function QuestionPanel({question, afterItemSelected}:QuestionPane
           return <div 
             className={answerClasses} 
             key={answer}
-            onClick={() => setAsSelectedIfNotSelected(answer)}>
+            onClick={() => setAsSelectedIfNotSelected(answer)}
+            >
             <p>{he.decode(answer)}</p>
           </div>
         })}
       </Panel>
   )
 }
-
-export type {QuestionI};
