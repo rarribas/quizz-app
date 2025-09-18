@@ -1,20 +1,22 @@
 'use client'
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Panel from "./panel"
 import { Badge } from "./badge"
 import he from "he";
 import { useQuizzStateStore, type QuestionI } from "@/store/useQuizzStateStore";
+import { suffleAnwers } from "@/lib/quizz";
 
 interface QuestionPanelProps {
   question: QuestionI
 }
 
 export default function QuestionPanel({question}:QuestionPanelProps ) {
-  const {incrementScore, answers, setAnswers, answerSelected, setAnswerSelected} = useQuizzStateStore();
+  const {incrementScore, answerSelected, setAnswerSelected} = useQuizzStateStore();
+  const [answers, setAnswers] = useState<string[]>(suffleAnwers(question));
 
   useEffect(() => {
-      setAnswers(question);
+      setAnswers(suffleAnwers(question));
       // Reset selection for new question
       setAnswerSelected('');
   }, [question, setAnswerSelected, setAnswers]);
