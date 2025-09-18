@@ -1,54 +1,22 @@
 'use client'
 
 import { useQuizzConfigStore } from "@/store/useQuizzConfigStore"
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loading from "./Loading";
 import QuestionPanel from "./QuestionPanel";
-import { getToken } from "@/lib/quizz";
+import useFetchQuestions from "@/hooks/useFetchQuestions";
 import { Button } from "./button";
 import {Progress} from "./progress";
-import { useQuizzStateStore, type QuestionI } from "@/store/useQuizzStateStore";
+import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 
 export default function QuestionWorkflow(){
   const {configuration} = useQuizzConfigStore();
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [questions, setQuestions] = useState<QuestionI[]>([]);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const {score, answerSelected} = useQuizzStateStore();
-  const fetchedRef = useRef(false);
+  const {questions, loading} = useFetchQuestions();
 
-  useEffect(() => {
-    // To avoid fethcing again when strict mode is enabled
-    // as we'll end up getting a too many request error in the API
-    if (fetchedRef.current) return; 
-    fetchedRef.current = true;
-    
-    // Get or reuse token
-    const fetchQuestions = async() =>{
-      let token = sessionStorage.getItem("quizzToken");
-      if(!token){
-        token = await getToken();
-        if(token){
-          sessionStorage.setItem("quizzToken", token);
-        }
-      }
-
-      try {
-        const res = await fetch(`https://opentdb.com/api.php?amount=10&category=${configuration.category}&difficulty=${configuration.difficulty}&token=${token}`);
-        const data = await res.json();
-        setQuestions(data.results);
-        setLoading(false)
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-      }
-    }
-
-    fetchQuestions();    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
 
   useEffect(() =>{
     if(!configuration || !configuration.done){

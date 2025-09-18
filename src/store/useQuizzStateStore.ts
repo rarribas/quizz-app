@@ -16,7 +16,6 @@ interface QuizzStateI {
   setAnswers: (question:QuestionI) => void;
   setAnswerSelected: (answer:string) => void;
   incrementScore: () => void;
-  // resetQuizz: () => void;
 }
 
 const suffleArray = <T,>(array: T[]): T[] => {
