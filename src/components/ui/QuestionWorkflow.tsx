@@ -9,6 +9,7 @@ import useFetchQuestions from "@/hooks/useFetchQuestions";
 import { Button } from "./button";
 import {Progress} from "./progress";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
+import CountDown from "./Countdown";
 
 export default function QuestionWorkflow(){
   const {configuration} = useQuizzConfigStore();
@@ -47,6 +48,10 @@ export default function QuestionWorkflow(){
   
   return (
     <div className="flex flex-col w-3/5 mx-auto my-0">
+      <div className="flex justify-between mb-2">
+        <CountDown/>
+        <div>Question {questionIndex + 1} of 10</div>
+      </div>
       <Progress className="mb-6" value={progress} />
       <QuestionPanel 
         question={questions[questionIndex]} 
