@@ -28,3 +28,21 @@ export const suffleAnwers = (question:QuestionI) => {
     ...question.incorrect_answers,
   ]);
 }
+
+export const suffleAnwersSecondV = (question:QuestionI) => {
+  return suffleArray([
+    {
+      text: question.correct_answer,
+      correct: true,
+      selected: false,
+    },
+    ...question.incorrect_answers.map((q) =>{
+      return {
+        text: q,
+        correct: false,
+        selected: false,
+      }
+    })
+    
+  ]);
+}

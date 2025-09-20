@@ -6,3 +6,9 @@ export interface QuestionI {
   correct_answer: string,
   incorrect_answers: string[],
 }
+
+export interface AnswerI {
+  text: string,
+  selected: boolean,
+  correct: boolean,
+}

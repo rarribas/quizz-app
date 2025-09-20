@@ -10,7 +10,6 @@ export default function useFetchQuestions() {
   const fetchedRef = useRef(false);
 
   useEffect(() => {
-    console.log("INSIDE USE EFFECT");
     // To avoid fethcing again when strict mode is enabled
     // as we'll end up getting a too many request error in the API
     if (fetchedRef.current) return; 

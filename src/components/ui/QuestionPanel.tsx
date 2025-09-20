@@ -5,7 +5,7 @@ import Panel from "./panel"
 import { Badge } from "./badge"
 import he from "he";
 import { useQuizzStateStore, type QuestionI } from "@/store/useQuizzStateStore";
-import { suffleAnwers } from "@/lib/quizz";
+import { suffleAnwers, suffleAnwersSecondV } from "@/lib/quizz";
 
 interface QuestionPanelProps {
   question: QuestionI
@@ -17,6 +17,7 @@ export default function QuestionPanel({question}:QuestionPanelProps ) {
 
   useEffect(() => {
       setAnswers(suffleAnwers(question));
+      console.log(suffleAnwersSecondV(question))
       // Reset selection for new question
       setAnswerSelected('');
   }, [question, setAnswerSelected, setAnswers]);
