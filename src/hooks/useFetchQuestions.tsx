@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from "react"
-import type { QuestionI } from "@/store/useQuizzStateStore";
+import { QuestionI, ModifiedQuestionI } from '@/types/question';
 import { useQuizzConfigStore } from "@/store/useQuizzConfigStore"
-import { getToken } from "@/lib/quizz";
+import { getToken, suffleAnwers } from "@/lib/quizz";
 
 export default function useFetchQuestions() {
   const {configuration} = useQuizzConfigStore();
   const [loading, setLoading] = useState<boolean>(true);
-  const [questions, setQuestions] = useState<QuestionI[]>([]);
+  const [questions, setQuestions] = useState<ModifiedQuestionI[]>([]);
   const fetchedRef = useRef(false);
 
   useEffect(() => {
@@ -29,7 +29,10 @@ export default function useFetchQuestions() {
       try {
         const res = await fetch(`https://opentdb.com/api.php?amount=10&category=${configuration.category}&difficulty=${configuration.difficulty}&token=${token}`);
         const data = await res.json();
-        setQuestions(data.results);
+        const modifiedQ = data.results.map((question:QuestionI) => {
+          return suffleAnwers(question)
+        })
+        setQuestions(modifiedQ);
         setLoading(false)
       } catch (error) {
         console.error(error);

@@ -1,5 +1,4 @@
 import {create } from 'zustand';
-import { QuestionI } from '@/types/question';
 
 interface QuizzStateI {
   answers: string[];
@@ -24,5 +23,3 @@ export const useQuizzStateStore = create<QuizzStateI>((set) => ({
   setTime: (time) => set(() => ({ time })),
   setCompleted: (value) => set(() => ({ completed: value })),
 }))
-
-export type {QuestionI};

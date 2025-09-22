@@ -1,4 +1,6 @@
-import { QuestionI } from "@/types/question";
+import { QuestionI, ModifiedQuestionI, AnswerI } from "@/types/question";
+import he from "he";
+import { v4 as uuidv4 } from 'uuid';
 
 export const getToken = async (): Promise<string | null> => {
   try {
@@ -22,9 +24,38 @@ const suffleArray = <T,>(array: T[]): T[] => {
       .map(({ value }) => value);
   };
 
-export const suffleAnwers = (question:QuestionI) => {
-  return suffleArray([
-    question.correct_answer,
-    ...question.incorrect_answers,
+export const suffleAnwers = (question:QuestionI):ModifiedQuestionI => {
+  const answers =  suffleArray([
+    {
+      id: uuidv4(),
+      title: question.correct_answer && he.decode(question.correct_answer),
+      correct: true,
+      selected: false,
+    },
+    ...question.incorrect_answers.map((q) =>{
+      return {
+        id: uuidv4(),
+        title: q && he.decode(q),
+        correct: false,
+        selected: false,
+      }
+    })
   ]);
+
+  return {
+    title: he.decode(question.question),
+    category: question.category,
+    difficulty: question.difficulty,
+    answers
+  };
+}
+
+export const hasAnswerSelected = (question: ModifiedQuestionI): boolean => {
+  const selectedAnswer =  question.answers.find((answer) => answer.selected);
+  return !!selectedAnswer;
+}
+
+export const findAnswerById = (question: ModifiedQuestionI, answerID: string | undefined)  => {
+  if(!answerID) return null
+  return question.answers.find((answer) => answer.id === answerID);
 }

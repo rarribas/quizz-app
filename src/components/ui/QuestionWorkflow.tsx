@@ -10,12 +10,12 @@ import { Button } from "./button";
 import {Progress} from "./progress";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 import CountDown from "./Countdown";
-
+import { hasAnswerSelected } from "@/lib/quizz";
 export default function QuestionWorkflow(){
   const {configuration} = useQuizzConfigStore();
   const router = useRouter();
   const [questionIndex, setQuestionIndex] = useState<number>(0);
-  const {score, answerSelected} = useQuizzStateStore();
+  // const {score, answerSelected} = useQuizzStateStore();
   const {questions, loading} = useFetchQuestions();
 
 
@@ -43,8 +43,7 @@ export default function QuestionWorkflow(){
   
   const progress = ((questionIndex + 1) / questions.length) * 100;
 
-  console.log("score", score);
-  console.log("PROGRESS", progress);
+  console.log("QUESTIONS", questions);
   
   return (
     <div className="flex flex-col w-3/5 mx-auto my-0">
@@ -63,7 +62,7 @@ export default function QuestionWorkflow(){
         >
           Previous
         </Button>
-        {answerSelected !== '' ?  
+        {hasAnswerSelected(questions[questionIndex]) ?  
           <Button size="sm" disabled={questionIndex >= 9} onClick={onNextButtonClick}>Next</Button> 
           : <Button size="sm" disabled={true}>Select an answer to continue</Button>}
        

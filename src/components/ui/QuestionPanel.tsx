@@ -3,30 +3,28 @@
 import { useEffect, useState } from "react"
 import Panel from "./panel"
 import { Badge } from "./badge"
-import he from "he";
-import { useQuizzStateStore, type QuestionI } from "@/store/useQuizzStateStore";
-import { suffleAnwers } from "@/lib/quizz";
+import { useQuizzStateStore} from "@/store/useQuizzStateStore";
+import {type ModifiedQuestionI, AnswerI} from "@/types/question";
+import { findAnswerById } from "@/lib/quizz";
 
 interface QuestionPanelProps {
-  question: QuestionI
+  question: ModifiedQuestionI
 }
 
 export default function QuestionPanel({question}:QuestionPanelProps ) {
   const {incrementScore, answerSelected, setAnswerSelected} = useQuizzStateStore();
-  const [answers, setAnswers] = useState<string[]>(suffleAnwers(question));
 
-  useEffect(() => {
-      setAnswers(suffleAnwers(question));
-      // Reset selection for new question
-      setAnswerSelected('');
-  }, [question, setAnswerSelected, setAnswers]);
+  const setAsSelectedIfNotSelected = (answer:AnswerI) =>{
+    const foundAnswer = findAnswerById(question, answer.id);
 
-  const setAsSelectedIfNotSelected = (answer:string) =>{
-    if(answerSelected !== '' ) return;
-    setAnswerSelected(answer);
-    if (answer === question.correct_answer) {
-      incrementScore();
+    if (foundAnswer) {
+      const selectedAnswer = { ...foundAnswer, selected: true };
     }
+    // if(answerSelected !== '' ) return;
+    // setAnswerSelected(answer);
+    // if (answer === question.correct_answer) {
+    //   incrementScore();
+    // }
   }
 
   return (
@@ -36,28 +34,21 @@ export default function QuestionPanel({question}:QuestionPanelProps ) {
           <Badge variant="secondary">{question.difficulty}</Badge>
         </header>
         
-        <h2 className="text-xl font-bold">{he.decode(question.question)}</h2>
-        {answers.map((answer) => {
-          let answerClasses = "p-2 text-center border my-4 rounded";
-          const isCorrect = question.correct_answer === answer;
-          const isSelected = answer === answerSelected;
+        <h2 className="text-xl font-bold">{question.title}</h2>
+        {question.answers.map((answer) => {
+          let answerClasses = "p-2 text-center border my-4 rounded cursor-pointer";
+ 
 
-          if(answerSelected === ''){
-            answerClasses += " cursor-pointer";
-          }
-
-          if(answerSelected && isCorrect){
-            answerClasses += " bg-green-300 text-white";
-          }else if(isSelected && !isCorrect){
-            answerClasses += " bg-red-300 text-white";
+          if(answer.selected){
+            answerClasses += " bg-gray-300";
           }
 
           return <div 
             className={answerClasses} 
-            key={answer}
+            key={answer.id}
             onClick={() => setAsSelectedIfNotSelected(answer)}
             >
-            <p>{he.decode(answer)}</p>
+            <p>{answer.title}</p>
           </div>
         })}
       </Panel>
