@@ -62,3 +62,15 @@ export const findAnswerById = (question: ModifiedQuestionI, answerID: string | u
 export const findSelectedAnswer = (question: ModifiedQuestionI)  => {
   return question.answers.find((answer) => answer.selected);
 }
+export const filterByCorrectAnswerSelected = (questions: ModifiedQuestionI[]):ModifiedQuestionI[]  => {
+  return questions.filter((question) => {
+    return question.answers.some((answer) => {
+      return answer.correct && answer.selected;
+    });
+  });
+}
+
+export const getNumberOfQuestionsWithCorrectAnswer = (questions: ModifiedQuestionI[]):number => {
+  const rigthQuestions = filterByCorrectAnswerSelected(questions);
+  return rigthQuestions.length;
+}

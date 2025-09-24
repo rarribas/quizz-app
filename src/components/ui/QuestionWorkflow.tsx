@@ -7,7 +7,6 @@ import Loading from "./Loading";
 import QuestionPanel from "./QuestionPanel";
 import QuizzNavigation from "./QuizzNavigation";
 import useFetchQuestions from "@/hooks/useFetchQuestions";
-import { Button } from "./button";
 import {Progress} from "./progress";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 import CountDown from "./Countdown";

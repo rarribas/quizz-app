@@ -1,3 +1,4 @@
+import QuizzResults from "@/components/ui/QuizzResults"
 export default function QuizzCompleted(){
-  return <div>Quizz Completed!!</div>
+  return <QuizzResults/>
 }
