@@ -1,25 +1,20 @@
 import {create } from 'zustand';
+import { ModifiedQuestionI } from '@/types/question';
 
 interface QuizzStateI {
-  answers: string[];
-  answerSelected: string;
-  score: number;
+  questions: ModifiedQuestionI[];
   time: number;
   completed: boolean,
   setTime: (time:number) => void;
-  setAnswerSelected: (answer:string) => void;
-  incrementScore: () => void;
   setCompleted: (value:boolean) => void;
+  setQuestions: (questions:ModifiedQuestionI[]) => void;
 }
 
 export const useQuizzStateStore = create<QuizzStateI>((set) => ({
-  score: 0,
-  answers: [],
-  answerSelected: '',
+  questions:[],
   time: 120,
   completed: false,
-  incrementScore: () => set((state) => ({ score: state.score + 1 })),
-  setAnswerSelected: (answer) => set(() => ({ answerSelected: answer })),
   setTime: (time) => set(() => ({ time })),
   setCompleted: (value) => set(() => ({ completed: value })),
+  setQuestions: (questions) => set(() => ({ questions })),
 }))

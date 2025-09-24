@@ -15,8 +15,8 @@ export default function QuestionWorkflow(){
   const {configuration} = useQuizzConfigStore();
   const router = useRouter();
   const [questionIndex, setQuestionIndex] = useState<number>(0);
-  // const {score, answerSelected} = useQuizzStateStore();
-  const {questions, loading} = useFetchQuestions();
+  const {questions, completed, setCompleted} = useQuizzStateStore();
+  const {loading} = useFetchQuestions();
 
 
   useEffect(() =>{
@@ -24,7 +24,11 @@ export default function QuestionWorkflow(){
       router.replace("/quizz");
     }
 
-  },[configuration, router])
+    if(completed){
+      router.replace("/quizz/completed")
+    }
+
+  },[configuration, completed, router])
 
   if(!configuration || !configuration.done) return null;
   if(loading) return <Loading/>
@@ -37,13 +41,21 @@ export default function QuestionWorkflow(){
 
   const onNextButtonClick = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     ev.preventDefault();
-
+    console.log(questionIndex, "THE INDEX");
+    if(questionIndex + 1 >= 9) {
+      setCompleted(true)
+      return;
+    }
     setQuestionIndex(prevIndex => prevIndex + 1);
+  }
+
+  const onPrevButtonClick = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+    ev.preventDefault();
+
+    setQuestionIndex(prevIndex => prevIndex - 1);
   }
   
   const progress = ((questionIndex + 1) / questions.length) * 100;
-
-  console.log("QUESTIONS", questions);
   
   return (
     <div className="flex flex-col w-3/5 mx-auto my-0">
@@ -59,6 +71,7 @@ export default function QuestionWorkflow(){
         <Button 
           size="sm"
           disabled={questionIndex === 0}
+          onClick={onPrevButtonClick}
         >
           Previous
         </Button>

@@ -1,30 +1,45 @@
 'use client'
 
-import { useEffect, useState } from "react"
+// import { useEffect, useState } from "react"
 import Panel from "./panel"
 import { Badge } from "./badge"
 import { useQuizzStateStore} from "@/store/useQuizzStateStore";
 import {type ModifiedQuestionI, AnswerI} from "@/types/question";
-import { findAnswerById } from "@/lib/quizz";
 
 interface QuestionPanelProps {
   question: ModifiedQuestionI
 }
 
 export default function QuestionPanel({question}:QuestionPanelProps ) {
-  const {incrementScore, answerSelected, setAnswerSelected} = useQuizzStateStore();
+
+  const {questions, setQuestions} =  useQuizzStateStore();
 
   const setAsSelectedIfNotSelected = (answer:AnswerI) =>{
-    const foundAnswer = findAnswerById(question, answer.id);
+    const updatedAnswers = question.answers.map((a) => {
+      // If this was the previously selected one → deselect it
+      if (a.selected) {
+        return { ...a, selected: false };
+      }
 
-    if (foundAnswer) {
-      const selectedAnswer = { ...foundAnswer, selected: true };
+      // If this is the clicked one → select it
+      if (a.id === answer.id) {
+        return { ...a, selected: true };
+      }
+
+      // Everything else stays the same
+      return a;
+    });
+
+    const modifiedQ:ModifiedQuestionI = {
+      ...question,
+      answers: updatedAnswers
     }
-    // if(answerSelected !== '' ) return;
-    // setAnswerSelected(answer);
-    // if (answer === question.correct_answer) {
-    //   incrementScore();
-    // }
+
+    const updatedQuestions = questions.map((q) =>
+      q.title === question.title ? modifiedQ : q
+    );
+
+    setQuestions(updatedQuestions);
   }
 
   return (

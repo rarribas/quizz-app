@@ -2,10 +2,13 @@ import { useEffect } from "react";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 import { Clock8 } from "lucide-react";
 export default function CountDown(){
-  const {completed, time, setTime} =useQuizzStateStore();
+  const {completed, setCompleted,  time, setTime} =useQuizzStateStore();
 
   useEffect(() => {
-    if (time <= 0) return;
+    if (time <= 0){
+      setCompleted(true)
+      return;
+    };
     // If quizz completed stop the counter
     if (completed) return;
 
@@ -15,7 +18,7 @@ export default function CountDown(){
 
     return () => clearInterval(interval);
 
-  }, [time, setTime, completed]);
+  }, [time, setTime, completed, setCompleted]);
 
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;

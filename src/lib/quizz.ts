@@ -59,3 +59,6 @@ export const findAnswerById = (question: ModifiedQuestionI, answerID: string | u
   if(!answerID) return null
   return question.answers.find((answer) => answer.id === answerID);
 }
+export const findSelectedAnswer = (question: ModifiedQuestionI)  => {
+  return question.answers.find((answer) => answer.selected);
+}

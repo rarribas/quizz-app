@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from "react"
-import { QuestionI, ModifiedQuestionI } from '@/types/question';
+import { QuestionI } from '@/types/question';
 import { useQuizzConfigStore } from "@/store/useQuizzConfigStore"
 import { getToken, suffleAnwers } from "@/lib/quizz";
+import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 
 export default function useFetchQuestions() {
   const {configuration} = useQuizzConfigStore();
   const [loading, setLoading] = useState<boolean>(true);
-  const [questions, setQuestions] = useState<ModifiedQuestionI[]>([]);
   const fetchedRef = useRef(false);
+  const {setQuestions} = useQuizzStateStore();
 
   useEffect(() => {
     console.log("INSIDE USE EFFECT");
@@ -44,5 +45,5 @@ export default function useFetchQuestions() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
-  return {questions, loading}  
+  return {loading}  
 }
