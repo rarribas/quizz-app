@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loading from "./Loading";
 import QuestionPanel from "./QuestionPanel";
+import QuizzNavigation from "./QuizzNavigation";
 import useFetchQuestions from "@/hooks/useFetchQuestions";
 import { Button } from "./button";
 import {Progress} from "./progress";
@@ -67,19 +68,12 @@ export default function QuestionWorkflow(){
       <QuestionPanel 
         question={questions[questionIndex]} 
       />
-      <div className="flex m-4 justify-between">
-        <Button 
-          size="sm"
-          disabled={questionIndex === 0}
-          onClick={onPrevButtonClick}
-        >
-          Previous
-        </Button>
-        {hasAnswerSelected(questions[questionIndex]) ?  
-          <Button size="sm" disabled={questionIndex >= 9} onClick={onNextButtonClick}>Next</Button> 
-          : <Button size="sm" disabled={true}>Select an answer to continue</Button>}
-       
-      </div>
+      <QuizzNavigation
+        questionIndex={questionIndex}
+        onNextButtonClicked={onNextButtonClick}
+        onPrevButtonCliked={onPrevButtonClick}
+        canShowNext={hasAnswerSelected(questions[questionIndex])}
+      />
     </div>
   )
 }
