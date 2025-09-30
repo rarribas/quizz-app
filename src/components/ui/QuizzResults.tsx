@@ -14,13 +14,6 @@ export default function QuizzResults(){
     }
   },[completed, router])
 
-  console.log(
-    questions.map((q, i) => ({
-      index: i,
-      hasCorrect: q.answers.some((a) => a.correct),
-      answers: q.answers,
-    }))
-  );
   return(<div>
     <h1>Quizz Completed!</h1>
     <p>Time left: {time}</p>

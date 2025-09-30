@@ -7,11 +7,11 @@ import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 export default function useFetchQuestions() {
   const {configuration} = useQuizzConfigStore();
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const fetchedRef = useRef(false);
   const {setQuestions} = useQuizzStateStore();
 
   useEffect(() => {
-    console.log("INSIDE USE EFFECT");
     // To avoid fethcing again when strict mode is enabled
     // as we'll end up getting a too many request error in the API
     if (fetchedRef.current) return; 
@@ -37,6 +37,7 @@ export default function useFetchQuestions() {
         setLoading(false)
       } catch (error) {
         console.error(error);
+        setError(error instanceof Error ? error.message : String(error));
         setLoading(false);
       }
     }
@@ -45,5 +46,5 @@ export default function useFetchQuestions() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
-  return {loading}  
+  return {loading, error}  
 }

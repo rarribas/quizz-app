@@ -4,6 +4,7 @@ import { useQuizzConfigStore } from "@/store/useQuizzConfigStore"
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loading from "./Loading";
+import Error from "./Error";
 import QuestionPanel from "./QuestionPanel";
 import QuizzNavigation from "./QuizzNavigation";
 import useFetchQuestions from "@/hooks/useFetchQuestions";
@@ -16,7 +17,7 @@ export default function QuestionWorkflow(){
   const router = useRouter();
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const {questions, completed, setCompleted} = useQuizzStateStore();
-  const {loading} = useFetchQuestions();
+  const {loading, error} = useFetchQuestions();
 
 
   useEffect(() =>{
@@ -32,16 +33,11 @@ export default function QuestionWorkflow(){
 
   if(!configuration || !configuration.done) return null;
   if(loading) return <Loading/>
-
-  // TODO: Need to build error page.
-  // When refetching the API many times in a row I get no questions in the response
-  if(!questions){
-    return <p>TODO: Something went wrong</p>
-  }
+  if(error) return <Error errorMessage={error}/>
+  if(!questions)return <Error errorMessage={"Something wrong loading the questions"}/>
 
   const onNextButtonClick = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     ev.preventDefault();
-    console.log(questionIndex, "THE INDEX");
     if(questionIndex + 1 >= 9) {
       setCompleted(true)
       return;
