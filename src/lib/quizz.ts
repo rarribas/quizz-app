@@ -74,3 +74,14 @@ export const getNumberOfQuestionsWithCorrectAnswer = (questions: ModifiedQuestio
   const rigthQuestions = filterByCorrectAnswerSelected(questions);
   return rigthQuestions.length;
 }
+
+export const getTotalPoints = (questions: ModifiedQuestionI[], remainingTime:number):number => {
+  const numberOfRightQuestions = getNumberOfQuestionsWithCorrectAnswer(questions);
+  let points = numberOfRightQuestions;
+
+  if(points >= 5){
+    points += remainingTime;
+  }
+
+  return points;
+}
