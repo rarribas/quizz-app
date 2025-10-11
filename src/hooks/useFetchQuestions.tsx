@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react"
 import { QuestionI } from '@/types/question';
 import { useQuizzConfigStore } from "@/store/useQuizzConfigStore"
-import { getToken, suffleAnwers } from "@/lib/quizz";
+import { getToken, shuffleAnswers } from "@/lib/quizz";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 
 export default function useFetchQuestions() {
@@ -30,8 +30,9 @@ export default function useFetchQuestions() {
       try {
         const res = await fetch(`https://opentdb.com/api.php?amount=10&category=${configuration.category}&difficulty=${configuration.difficulty}&token=${token}`);
         const data = await res.json();
+        console.log(data.results, "RESULTS??");
         const modifiedQ = data.results.map((question:QuestionI) => {
-          return suffleAnwers(question)
+          return shuffleAnswers(question)
         })
         setQuestions(modifiedQ);
         setLoading(false)

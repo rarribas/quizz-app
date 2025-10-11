@@ -1,4 +1,4 @@
-import { QuestionI, ModifiedQuestionI, AnswerI } from "@/types/question";
+import { QuestionI, ModifiedQuestionI } from "@/types/question";
 import he from "he";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -17,15 +17,15 @@ export const getToken = async (): Promise<string | null> => {
   }
 };
 
-const suffleArray = <T,>(array: T[]): T[] => {
+const shuffleArray = <T,>(array: T[]): T[] => {
     return array
       .map(value => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
   };
 
-export const suffleAnwers = (question:QuestionI):ModifiedQuestionI => {
-  const answers =  suffleArray([
+export const shuffleAnswers = (question:QuestionI):ModifiedQuestionI => {
+  const answers =  shuffleArray([
     {
       id: uuidv4(),
       title: question.correct_answer && he.decode(question.correct_answer),
