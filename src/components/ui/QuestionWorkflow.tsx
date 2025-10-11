@@ -38,7 +38,7 @@ export default function QuestionWorkflow(){
 
   const onNextButtonClick = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     ev.preventDefault();
-    if(questionIndex + 1 >= 9) {
+    if(questionIndex + 1 === 10) {
       setCompleted(true)
       return;
     }
@@ -55,7 +55,7 @@ export default function QuestionWorkflow(){
   
   return (
     <div className="flex flex-col w-3/5 mx-auto my-0">
-      <div className="flex justify-between mb-2">
+      <div className="flex justify-between mt-4 mb-2">
         <CountDown/>
         <div>Question {questionIndex + 1} of 10</div>
       </div>

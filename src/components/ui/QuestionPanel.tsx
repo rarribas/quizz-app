@@ -4,6 +4,7 @@
 import Panel from "./panel"
 import { Badge } from "./badge"
 import { useQuizzStateStore} from "@/store/useQuizzStateStore";
+import { useQuizzCategoriesStore } from "@/store/useQuizzCategoriesStore";
 import {type ModifiedQuestionI, AnswerI} from "@/types/question";
 import { cn } from "@/lib/utils"
 
@@ -16,6 +17,7 @@ interface QuestionPanelProps {
 export default function QuestionPanel({question, className, showCorrectAnswers}:QuestionPanelProps ) {
 
   const {questions, setQuestions} =  useQuizzStateStore();
+  const {difficulty} = useQuizzCategoriesStore();
 
   const setAsSelectedIfNotSelected = (answer:AnswerI) =>{
     if (showCorrectAnswers) return;
@@ -49,9 +51,9 @@ export default function QuestionPanel({question, className, showCorrectAnswers}:
 
   return (
      <Panel className={cn("w-full", className)}>
-        <header className="mb-4">
+        <header className="mb-4 flex gap-2">
           <Badge>{question.category}</Badge>
-          <Badge variant="secondary">{question.difficulty}</Badge>
+          <Badge variant="secondary">{difficulty[question.difficulty]}</Badge>
         </header>
         
         <h2 className="text-xl font-bold">{question.title}</h2>
@@ -61,7 +63,8 @@ export default function QuestionPanel({question, className, showCorrectAnswers}:
             "p-2 text-center border my-4 rounded transition-colors",
             {
               // During answering phase
-              "cursor-pointer bg-gray-300": !showCorrectAnswers && answer.selected,
+              "cursor-pointer hover:bg-gray-100": !showCorrectAnswers,
+              "bg-gray-300": !showCorrectAnswers && answer.selected,
 
               // No answer selected: show correct ones green, others gray
               "bg-green-200": showCorrectAnswers && !hasSelectedAnswer && answer.correct,

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 import {getNumberOfQuestionsWithCorrectAnswer, getTotalPoints} from "@/lib/quizz"
-import Panel from "./panel";
+import Header from "./header";
 import QuestionPanel from "./QuestionPanel";
 export default function QuizzResults(){
   const router = useRouter();
@@ -16,18 +16,14 @@ export default function QuizzResults(){
     }
   },[completed, router])
 
-
   return(<div className="flex flex-col w-3/5 mx-auto my-0">
-    <Panel className="w-full mb-5">
-      <header>
-        <h1>Quizz Completed!</h1>
-      </header>
-      <div>
-        <p>Time left: {time}</p>
-        <p>Number of correct answers: {getNumberOfQuestionsWithCorrectAnswer(questions)}</p>
-        <p>Total Points: {getTotalPoints(questions, time)} </p>
-      </div>
-    </Panel>
+    <div className="w-full m-5">
+      <Header 
+        title="Quizz Completed!" 
+        desc={`Congratulations! You have completed the quizz with ${getNumberOfQuestionsWithCorrectAnswer(questions)} correct answers out of 10`}
+      />
+      <p className="px-1 text-2xl font-bold text-center text-green-600">Points: {getTotalPoints(questions, time)} </p>
+    </div>
     {questions.map((question) => {
       return <QuestionPanel key={question.title} question={question} showCorrectAnswers={true} className="mb-5"/>
     })}

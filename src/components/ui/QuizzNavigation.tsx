@@ -7,8 +7,10 @@ interface QuizzNavigationProps{
   onPrevButtonCliked: (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
 }
 export default function QuizzNavigation({questionIndex, canShowNext, onNextButtonClicked, onPrevButtonCliked}: QuizzNavigationProps){
+  const totalQuestions = 10;
+  const isLastQuestion = questionIndex === totalQuestions - 1;
   return(
-    <div className="flex m-4 justify-between">
+    <div className="flex my-4 justify-between">
       <Button 
         size="sm"
         disabled={questionIndex === 0}
@@ -17,7 +19,7 @@ export default function QuizzNavigation({questionIndex, canShowNext, onNextButto
         Previous Question
       </Button>
       {canShowNext ?  
-        <Button size="sm" disabled={questionIndex >= 9} onClick={onNextButtonClicked}>Next Question</Button> 
+        <Button size="sm" disabled={questionIndex + 1 > 10} onClick={onNextButtonClicked}>{isLastQuestion ? "Finish Quiz" : "Next Question"}</Button> 
         : <Button size="sm" disabled={true}>Select an answer to continue</Button>}
       
     </div>

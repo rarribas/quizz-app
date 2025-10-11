@@ -15,7 +15,7 @@ export interface QuestionI {
 }
 
 export interface ModifiedQuestionI {
-  difficulty: string,
+  difficulty: 'easy' | 'medium' | 'hard',
   category: string,
   title: string,
   answers: AnswerI[],
