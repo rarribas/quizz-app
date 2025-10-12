@@ -25,7 +25,7 @@ export default function QuizzResults(){
       <p className="px-1 text-2xl font-bold text-center text-green-600">Points: {getTotalPoints(questions, time)} </p>
     </div>
     {questions.map((question) => {
-      return <QuestionPanel key={question.title} question={question} showCorrectAnswers={true} className="mb-5"/>
+      return <QuestionPanel key={question.title} question={question} className="mb-5"/>
     })}
   </div>)
 }
