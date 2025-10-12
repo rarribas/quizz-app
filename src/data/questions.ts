@@ -245,5 +245,4 @@ export const mockedFinalQuestionsAllRight: ModifiedQuestionI[] = [
       { id: "16", title: "True", correct: false, selected: false },
     ],
   },
-  // You can continue for all 10 questions in the same format
 ];
