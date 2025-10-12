@@ -1,6 +1,5 @@
 'use client'
 
-// import { useEffect, useState } from "react"
 import Panel from "./panel"
 import { Badge } from "./badge"
 import { useQuizzStateStore} from "@/store/useQuizzStateStore";
@@ -11,16 +10,15 @@ import { cn } from "@/lib/utils"
 interface QuestionPanelProps {
   question: ModifiedQuestionI,
   className?: string,
-  showCorrectAnswers?: boolean,
 }
 
-export default function QuestionPanel({question, className, showCorrectAnswers}:QuestionPanelProps ) {
+export default function QuestionPanel({question, className}:QuestionPanelProps ) {
 
-  const {questions, setQuestions} =  useQuizzStateStore();
+  const {questions, setQuestions, completed} =  useQuizzStateStore();
   const {difficulty} = useQuizzCategoriesStore();
 
   const setAsSelectedIfNotSelected = (answer:AnswerI) =>{
-    if (showCorrectAnswers) return;
+    if (completed) return;
 
     const updatedAnswers = question.answers.map((a) => {
       // If this was the previously selected one → deselect it
@@ -63,17 +61,17 @@ export default function QuestionPanel({question, className, showCorrectAnswers}:
             "p-2 text-center border my-4 rounded transition-colors",
             {
               // During answering phase
-              "cursor-pointer hover:bg-gray-100": !showCorrectAnswers,
-              "bg-gray-300": !showCorrectAnswers && answer.selected,
+              "cursor-pointer hover:bg-gray-100": !completed,
+              "bg-gray-300": !completed && answer.selected,
 
               // No answer selected: show correct ones green, others gray
-              "bg-green-200": showCorrectAnswers && !hasSelectedAnswer && answer.correct,
-              "bg-gray-200": showCorrectAnswers && !hasSelectedAnswer && !answer.correct,
+              "bg-green-200": completed && !hasSelectedAnswer && answer.correct,
+              "bg-gray-200": completed && !hasSelectedAnswer && !answer.correct,
               
               // Answer selected: usual behavior
-              "bg-green-300": showCorrectAnswers && hasSelectedAnswer && answer.correct,
-              "bg-red-300": showCorrectAnswers && hasSelectedAnswer && answer.selected && !answer.correct,
-              "bg-gray-100": showCorrectAnswers && hasSelectedAnswer && !answer.correct && !answer.selected,
+              "bg-green-300": completed && hasSelectedAnswer && answer.correct,
+              "bg-red-300": completed && hasSelectedAnswer && answer.selected && !answer.correct,
+              "bg-gray-100": completed && hasSelectedAnswer && !answer.correct && !answer.selected,
             }
           )
 
