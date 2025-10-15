@@ -79,6 +79,7 @@ export default function QuestionPanel({question, className}:QuestionPanelProps )
             className={answerClasses} 
             key={answer.id}
             onClick={() => setAsSelectedIfNotSelected(answer)}
+            data-testid={`answer-block-${answer.id}`}
             >
             <p>{answer.title}</p>
           </div>
