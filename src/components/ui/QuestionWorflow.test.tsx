@@ -64,14 +64,17 @@ describe('Question Workflow', () => {
     const prevBtn = getByTestId('test-prev-button');
     expect(nextBtn).toBeEnabled();
     expect(prevBtn).toBeDisabled();
+    expect(getByText("Question 1 of 10"))
     expect(getByText("March 10th is also known as Mar10 Day.")).toBeInTheDocument();
 
     fireEvent.click(nextBtn);
+    expect(getByText("Question 2 of 10"))
     expect(getByText("What type of animal was Harambe, who was shot after a child fell into its enclosure at the Cincinnati Zoo?")).toBeInTheDocument();
     expect(prevBtn).toBeEnabled();
     fireEvent.click(prevBtn);
 
     expect(prevBtn).toBeDisabled();
+    expect(getByText("Question 1 of 10"))
     expect(getByText("March 10th is also known as Mar10 Day.")).toBeInTheDocument();
   });
 
