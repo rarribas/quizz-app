@@ -14,7 +14,7 @@ const mockReplace = jest.fn();
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: jest.fn(),
-    replace: mockReplace, // you can check calls in tests
+    replace: mockReplace,
     back: jest.fn(),
   }),
 }));
@@ -26,6 +26,7 @@ describe("Quizz Configuration Form", () => {
   const mockSetConfiguration = jest.fn();
   
   beforeEach(() => {
+    jest.clearAllMocks();
     ((useQuizzCategoriesStore as unknown) as jest.Mock).mockReturnValue({
       categories: [{ id: "1", name: "General Knowledge" }],
       difficulty: { easy: "Easy", medium: "Medium", hard: "Hard" },
@@ -39,6 +40,9 @@ describe("Quizz Configuration Form", () => {
     });
   });
 
+  afterEach(() => {
+    jest.resetAllMocks(); // resets mocks to their original implementation
+  });
 
   it("shows errors if missing values", () => {
     const { getByText } = render(<QuizzConfigForm />);
