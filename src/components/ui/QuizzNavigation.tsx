@@ -20,7 +20,14 @@ export default function QuizzNavigation({questionIndex, canShowNext, onNextButto
         Previous Question
       </Button>
       {canShowNext ?  
-        <Button size="sm" disabled={questionIndex + 1 > 10} onClick={onNextButtonClicked} data-testid="test-next-button">{isLastQuestion ? "Finish Quiz" : "Next Question"}</Button> 
+        <Button 
+          size="sm" 
+          disabled={questionIndex + 1 > 10} 
+          onClick={onNextButtonClicked} 
+          data-testid="test-next-button"
+        >
+          {isLastQuestion ? "Finish Quizz" : "Next Question"}
+        </Button> 
         : <Button size="sm" disabled={true} data-testid="test-next-button">Select an answer to continue</Button>}
       
     </div>
