@@ -54,7 +54,7 @@ export default function QuestionPanel({question, className}:QuestionPanelProps )
           <Badge variant="secondary">{difficulty[question.difficulty]}</Badge>
         </header>
         
-        <h2 className="text-xl font-bold">{question.title}</h2>
+        <h2 className="text-xl font-bold" datatest-id="q-title-test">{question.title}</h2>
         {question.answers.map((answer) => {
           const hasSelectedAnswer = question.answers.some(a => a.selected);
           const answerClasses = cn(

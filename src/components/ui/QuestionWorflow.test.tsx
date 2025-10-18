@@ -109,7 +109,8 @@ describe('Question Workflow', () => {
     expect(mockReplace).toHaveBeenCalledWith('/quizz')
   });
   
-  it('Sets quizz to completed when last question done', () => {
-    // To be implemented (Not 100% sure how to test this or if it make sense to test this like this)
+  it("Sets quizz to completed when last question done", () => {
+    // I'm not 100% sure how to test this. Seems that I need
+    // to mock some logic to force re-renders?
   });
 });

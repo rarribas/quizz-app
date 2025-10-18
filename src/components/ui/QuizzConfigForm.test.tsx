@@ -3,7 +3,6 @@ import { userEvent } from "@testing-library/user-event";
 import QuizzConfigForm from "./QuizzConfigForm";
 import { useQuizzCategoriesStore } from "@/store/useQuizzCategoriesStore";
 import { useQuizzConfigStore } from "@/store/useQuizzConfigStore";
-import { useRouter } from "next/navigation";
 
 // Mock the zustand stores
 jest.mock("@/store/useQuizzCategoriesStore");
