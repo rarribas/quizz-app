@@ -2,14 +2,12 @@ import { render, fireEvent, waitFor } from "@testing-library/react";
 import {RawSignUpForm} from "./SignUpForm";
 import { signup } from "@/app/actions/auth-actions";
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
 
 
 jest.mock("@/app/actions/auth-actions", () => ({
   signup: jest.fn(),
 }));
 
-const mockReplace = jest.fn();
 jest.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(""),
   useRouter: () => ({

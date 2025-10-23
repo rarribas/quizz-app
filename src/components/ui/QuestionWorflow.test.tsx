@@ -1,9 +1,9 @@
 import { render, fireEvent } from '@testing-library/react';
-import { useQuizzStateStore } from '@/store/useQuizzStateStore';
 import { mockedFinalQuestionsNoneSelected, mockedFinalQuestions } from '@/data/questions';
 import QuestionWorkflow from './QuestionWorkflow';
-import { useQuizzConfigStore } from "@/store/useQuizzConfigStore";
+import { mockUseQuizzStateStore, mockUseQuizzConfigStore } from '@/app/quizz/tests/mocks';
 
+// Why do I need this?
 jest.mock('@/store/useQuizzStateStore');
 jest.mock('@/store/useQuizzConfigStore');
 
@@ -32,7 +32,7 @@ describe('Question Workflow', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    ((useQuizzConfigStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzConfigStore.mockReturnValue({
       configuration: { category: 'any', difficulty: 'any', done: true },
       setConfiguration: jest.fn(),
     });
@@ -40,9 +40,11 @@ describe('Question Workflow', () => {
 
   it('cannot navigate to next question if no answer selected', () => {
     const setQuestions = jest.fn();
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    const setCompleted = jest.fn();
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestionsNoneSelected,
       setQuestions,
+      setCompleted,
       completed: false,
     });
    
@@ -53,7 +55,7 @@ describe('Question Workflow', () => {
 
   it('navigates back and forth when answer is selected', () => {
     const setQuestions = jest.fn();
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       setQuestions,
       completed: false,
@@ -64,23 +66,23 @@ describe('Question Workflow', () => {
     const prevBtn = getByTestId('test-prev-button');
     expect(nextBtn).toBeEnabled();
     expect(prevBtn).toBeDisabled();
-    expect(getByText("Question 1 of 10"))
+    expect(getByText("Question 1 of 10")).toBeInTheDocument();
     expect(getByText("March 10th is also known as Mar10 Day.")).toBeInTheDocument();
 
     fireEvent.click(nextBtn);
-    expect(getByText("Question 2 of 10"))
+    expect(getByText("Question 2 of 10")).toBeInTheDocument();
     expect(getByText("What type of animal was Harambe, who was shot after a child fell into its enclosure at the Cincinnati Zoo?")).toBeInTheDocument();
     expect(prevBtn).toBeEnabled();
     fireEvent.click(prevBtn);
 
     expect(prevBtn).toBeDisabled();
-    expect(getByText("Question 1 of 10"))
+    expect(getByText("Question 1 of 10")).toBeInTheDocument();
     expect(getByText("March 10th is also known as Mar10 Day.")).toBeInTheDocument();
   });
 
   it('navigates to completed screen when completed is true', () => {
     const setQuestions = jest.fn();
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       setQuestions,
       completed: true,
@@ -93,13 +95,13 @@ describe('Question Workflow', () => {
 
   it('redirects to /quizz if configuration not done', () => {
     const setQuestions = jest.fn();
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       setQuestions,
       completed: false,
     });
 
-    ((useQuizzConfigStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzConfigStore.mockReturnValue({
       configuration: { category: 'any', difficulty: 'any', done: false },
       setConfiguration: jest.fn(),
     });
@@ -110,7 +112,6 @@ describe('Question Workflow', () => {
   });
   
   it("Sets quizz to completed when last question done", () => {
-    // I'm not 100% sure how to test this. Seems that I need
-    // to mock some logic to force re-renders?
+    // TODO Test this in Cypress
   });
 });

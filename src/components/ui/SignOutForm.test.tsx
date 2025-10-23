@@ -1,4 +1,4 @@
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import SignOutForm from "./SignOutForm";
 import { signOut } from "next-auth/react";
 

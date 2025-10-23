@@ -1,9 +1,11 @@
 import { render } from "@testing-library/react";
 import QuizzResults from "./QuizzResults";
-import { useQuizzStateStore } from "@/store/useQuizzStateStore";
-import { useQuizzCategoriesStore } from "@/store/useQuizzCategoriesStore";
-import { useQuizzConfigStore } from "@/store/useQuizzConfigStore";
 import { mockedFinalQuestionsAllRight } from "@/data/questions";
+import { 
+  mockUseQuizzCategoriesStore, 
+  mockUseQuizzConfigStore, 
+  mockUseQuizzStateStore 
+} from "@/app/quizz/tests/mocks";
 
 jest.mock("@/store/useQuizzStateStore");
 jest.mock("@/store/useQuizzCategoriesStore");
@@ -37,21 +39,21 @@ describe("Quizz Results", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    ((useQuizzCategoriesStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzCategoriesStore.mockReturnValue({
       categories: [{ id: "1", name: "General Knowledge" }],
       difficulty: { easy: "Easy", medium: "Medium", hard: "Hard" },
       loading: false,
       fetchCategories: mockFetchCategories,
     });
 
-    ((useQuizzConfigStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzConfigStore.mockReturnValue({
       configuration: null,
       setConfiguration: mockSetConfiguration,
     });
   });
 
   it("renders with the right results", () => {
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestionsAllRight,
       completed: false,
       time: 30,
@@ -62,7 +64,7 @@ describe("Quizz Results", () => {
   });
 
   it("renders all the questions", () => {
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestionsAllRight,
       completed: false,
       time: 30,
@@ -78,7 +80,7 @@ describe("Quizz Results", () => {
 
    it('redirects to /quizz/start if configuration not done', () => {
       const setQuestions = jest.fn();
-      ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+      mockUseQuizzStateStore.mockReturnValue({
         questions: mockedFinalQuestionsAllRight,
         setQuestions,
         completed: false,

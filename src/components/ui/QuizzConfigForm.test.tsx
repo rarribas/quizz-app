@@ -1,8 +1,7 @@
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import QuizzConfigForm from "./QuizzConfigForm";
-import { useQuizzCategoriesStore } from "@/store/useQuizzCategoriesStore";
-import { useQuizzConfigStore } from "@/store/useQuizzConfigStore";
+import { mockUseQuizzCategoriesStore, mockUseQuizzConfigStore } from "@/app/quizz/tests/mocks";
 
 // Mock the zustand stores
 jest.mock("@/store/useQuizzCategoriesStore");
@@ -26,14 +25,14 @@ describe("Quizz Configuration Form", () => {
   
   beforeEach(() => {
     jest.clearAllMocks();
-    ((useQuizzCategoriesStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzCategoriesStore.mockReturnValue({
       categories: [{ id: "1", name: "General Knowledge" }],
       difficulty: { easy: "Easy", medium: "Medium", hard: "Hard" },
       loading: false,
       fetchCategories: mockFetchCategories,
     });
 
-    ((useQuizzConfigStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzConfigStore.mockReturnValue({
       configuration: null,
       setConfiguration: mockSetConfiguration,
     });
@@ -83,7 +82,7 @@ describe("Quizz Configuration Form", () => {
   });
 
   it("redirects to quizz/start when configuration is done", () => {
-    ((useQuizzConfigStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzConfigStore.mockReturnValue({
       configuration:  { done: true, category: "1", difficulty: "easy" },
       setConfiguration: mockSetConfiguration,
     });

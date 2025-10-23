@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import CountDown from './Countdown';
-import { useQuizzStateStore } from '@/store/useQuizzStateStore';
 import { mockedFinalQuestions } from '@/data/questions';
+import { mockUseQuizzStateStore } from '@/app/quizz/tests/mocks';
 
 jest.mock('@/store/useQuizzStateStore');
 
@@ -19,7 +19,7 @@ describe('Countdown', () => {
   it('shows the right time', () => {
     const setCompleted = jest.fn();
     const setTime = jest.fn();
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       completed: false,
       time: 125,
@@ -34,7 +34,7 @@ describe('Countdown', () => {
   it('decrements time every second', () => {
     const setCompleted = jest.fn();
     const setTime = jest.fn();
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       completed: false,
       time: 125,
@@ -50,7 +50,7 @@ describe('Countdown', () => {
   it('Sets quizz to completed when count down finishes', () => {
     const setCompleted = jest.fn();
     const setTime = jest.fn();
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       completed: false,
       time: 0,

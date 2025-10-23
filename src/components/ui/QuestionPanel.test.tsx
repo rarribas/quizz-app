@@ -1,9 +1,8 @@
 import { render, fireEvent } from '@testing-library/react';
 import QuestionPanel from './QuestionPanel';
-import { useQuizzStateStore } from '@/store/useQuizzStateStore';
-import { useQuizzCategoriesStore } from '@/store/useQuizzCategoriesStore';
 import { mockedFinalQuestions } from '@/data/questions';
 import { ModifiedQuestionI } from "@/types/question";
+import { mockUseQuizzStateStore, mockUseQuizzCategoriesStore } from '@/app/quizz/tests/mocks';
 
 jest.mock('@/store/useQuizzStateStore');
 jest.mock('@/store/useQuizzCategoriesStore');
@@ -11,13 +10,13 @@ jest.mock('@/store/useQuizzCategoriesStore');
 describe('QuestionPanel', () => {
   it('selects and unselects previous answer and select new one', () => {
     const setQuestions = jest.fn();
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       setQuestions,
       completed: false,
     });
 
-    ((useQuizzCategoriesStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzCategoriesStore.mockReturnValue({
       difficulty: { easy: 'Easy', medium: 'Medium', hard: 'Hard' },
     });
 
@@ -40,13 +39,13 @@ describe('QuestionPanel', () => {
 
   it('does not show correct answer if quizz not completed', () => {
     const setQuestions = jest.fn();
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       setQuestions,
       completed: false,
     });
 
-    ((useQuizzCategoriesStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzCategoriesStore.mockReturnValue({
       difficulty: { easy: 'Easy', medium: 'Medium', hard: 'Hard' },
     });
 
@@ -58,13 +57,13 @@ describe('QuestionPanel', () => {
 
   it('does not allow selecting answers if quizz is completed', () => {
     const setQuestions = jest.fn();
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       setQuestions,
       completed: true,
     });
 
-    ((useQuizzCategoriesStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzCategoriesStore.mockReturnValue({
       difficulty: { easy: 'Easy', medium: 'Medium', hard: 'Hard' },
     });
 
@@ -77,13 +76,13 @@ describe('QuestionPanel', () => {
   });
 
   it('shows correct answer when quizz is completed', () => {
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       setQuestions: jest.fn(),
       completed: true,
     });
 
-    ((useQuizzCategoriesStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzCategoriesStore.mockReturnValue({
       difficulty: { easy: 'Easy', medium: 'Medium', hard: 'Hard' },
     });
 
@@ -94,13 +93,13 @@ describe('QuestionPanel', () => {
   });
 
   it('shows in red wrong answer when quizz is completed', () => {
-    ((useQuizzStateStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestions,
       setQuestions: jest.fn(),
       completed: true,
     });
 
-    ((useQuizzCategoriesStore as unknown) as jest.Mock).mockReturnValue({
+    mockUseQuizzCategoriesStore.mockReturnValue({
       difficulty: { easy: 'Easy', medium: 'Medium', hard: 'Hard' },
     });
 
