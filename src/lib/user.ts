@@ -25,7 +25,7 @@ export async function createUser(
   }
 }
 
-// TODO: ADD Types jere
+// TODO: ADD Types here
 export async function findUserByEmail(email: string){
   try {
     await connectToDatabase();
