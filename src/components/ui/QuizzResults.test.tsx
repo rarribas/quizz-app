@@ -60,7 +60,7 @@ describe("Quizz Results", () => {
     });
 
     const {getByText} = render(<QuizzResults/>);
-    getByText('Congratulations! You have completed the quizz with 5 correct answers out of 10');
+    getByText('5/10 correct');
   });
 
   it("renders all the questions", () => {

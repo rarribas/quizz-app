@@ -5,8 +5,6 @@ import { JWT } from "next-auth/jwt";
 import { Session, User } from "next-auth";
 import { verifyPassword } from "./hash";
 import { findUserByEmail } from "./user";
-// import { compare } from "bcryptjs"; // Optional: If using bcrypt
-// import { getUserByEmail } from "./your-db-utils"; // 👈 Your DB logic
 
 export const authConfig = {
   providers: [

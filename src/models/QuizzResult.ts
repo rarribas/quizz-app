@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const quizzResultSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -20,5 +20,5 @@ const userSchema = new mongoose.Schema({
   }
 })
 
-const QuizzResult = mongoose.models.QuizzResult || mongoose.model("User", userSchema)
+const QuizzResult = mongoose.models.QuizzResult || mongoose.model("QuizzResult", quizzResultSchema)
 export default QuizzResult;
