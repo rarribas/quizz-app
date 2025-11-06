@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import QuizzResults from "./QuizzResults";
 import { mockedFinalQuestionsAllRight } from "@/data/questions";
 import { 
@@ -6,10 +6,16 @@ import {
   mockUseQuizzConfigStore, 
   mockUseQuizzStateStore 
 } from "@/app/quizz/tests/mocks";
+import { saveQuizzResult } from "@/app/actions/quizz-actions";
+import { getTotalPoints, getNumberOfQuestionsWithCorrectAnswer } from "@/lib/quizz";
 
 jest.mock("@/store/useQuizzStateStore");
 jest.mock("@/store/useQuizzCategoriesStore");
 jest.mock("@/store/useQuizzConfigStore");
+
+jest.mock("@/app/actions/quizz-actions", () => ({
+  saveQuizzResult: jest.fn(),
+}));
 
 jest.mock('uuid', () => ({
   v4: jest.fn(() => 'mock-uuid'),
@@ -33,6 +39,18 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
+jest.mock("react", () => {
+  const actualReact = jest.requireActual("react");
+  return {
+    ...actualReact,
+    useTransition: (): [boolean, (callback: () => void) => void] => [
+      false, // isPending
+      (callback) => callback(), // startTransition runs callback immediately
+    ],
+  };
+});
+
+
 describe("Quizz Results", () => {
   const mockFetchCategories = jest.fn();
   const mockSetConfiguration = jest.fn();
@@ -53,9 +71,12 @@ describe("Quizz Results", () => {
   });
 
   it("renders with the right results", () => {
+    (saveQuizzResult as jest.Mock).mockResolvedValue({
+      success: true,
+    });
     mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestionsAllRight,
-      completed: false,
+      completed: true,
       time: 30,
     });
 
@@ -66,7 +87,7 @@ describe("Quizz Results", () => {
   it("renders all the questions", () => {
     mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestionsAllRight,
-      completed: false,
+      completed: true,
       time: 30,
     });
     const { getByText } = render(<QuizzResults />);
@@ -78,16 +99,40 @@ describe("Quizz Results", () => {
     getByText('The Great Wall of China is visible from the moon.');
   });
 
-   it('redirects to /quizz/start if configuration not done', () => {
-      const setQuestions = jest.fn();
-      mockUseQuizzStateStore.mockReturnValue({
-        questions: mockedFinalQuestionsAllRight,
-        setQuestions,
-        completed: false,
-      });
-  
-      render(<QuizzResults />);
-  
-      expect(mockReplace).toHaveBeenCalledWith('/quizz/start')
+  it("calls saveQuizzResult with the right data", async () => {
+    (saveQuizzResult as jest.Mock).mockResolvedValue({ success: true });
+
+    mockUseQuizzStateStore.mockReturnValue({
+      questions: mockedFinalQuestionsAllRight,
+      completed: true,
+      time: 30,
     });
+
+    const expectedScore = getTotalPoints(mockedFinalQuestionsAllRight, 30);
+    const expectedCorrect = getNumberOfQuestionsWithCorrectAnswer(mockedFinalQuestionsAllRight);
+
+    render(<QuizzResults />);
+
+    await waitFor(() => {
+      expect(saveQuizzResult).toHaveBeenCalledWith({
+        time: 30,
+        score: expectedScore,
+        numberOfCorrectAnswers: expectedCorrect,
+      });
+    });
+  });
+
+
+  it('redirects to /quizz/start if configuration not done', () => {
+    const setQuestions = jest.fn();
+    mockUseQuizzStateStore.mockReturnValue({
+      questions: mockedFinalQuestionsAllRight,
+      setQuestions,
+      completed: false,
+    });
+
+    render(<QuizzResults />);
+
+    expect(mockReplace).toHaveBeenCalledWith('/quizz/start')
+  });
 });
