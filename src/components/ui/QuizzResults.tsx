@@ -6,11 +6,12 @@ import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 import {getNumberOfQuestionsWithCorrectAnswer, getTotalPoints} from "@/lib/quizz"
 import Header from "./header";
 import QuestionPanel from "./QuestionPanel";
+import MyScorePanel from "./MyScorePanel";
 import {TrophyIcon} from "lucide-react";
-import Panel from "./panel";
 import { saveQuizzResult } from "@/app/actions/quizz-actions";
 import Error from "./Error";
 import Loading from "./Loading";
+import { Button } from "./button";
 export default function QuizzResults(){
   const router = useRouter();
   const {completed, time, questions} = useQuizzStateStore();
@@ -50,16 +51,16 @@ export default function QuizzResults(){
         icon={<TrophyIcon size={48} />}
       />
     </div>
-    <Panel className="w-full mb-5">
-      <h3 className="mb-4">Your Latest Score</h3>
-      <div className="flex items-center">
-        <p className="text-3xl font-bold text-green-600">{totalPoints} </p>
-        <div className="mx-3">
-          <p className="text-sm">{correctQuestions}/10 correct</p>
-          <p className="text-sm">{time} seconds bonus</p>
-        </div>
-      </div>
-    </Panel>
+
+    <MyScorePanel 
+      score={totalPoints} 
+      numberCorrectAnswers={correctQuestions}
+      timeBonus={time}
+      action={<Button asChild>
+        <a href="/quizz/leaderboard">View Leaderboard</a>
+      </Button>}
+    />
+
     {questions.map((question) => {
       return <QuestionPanel key={question.title} question={question} className="mb-5"/>
     })}

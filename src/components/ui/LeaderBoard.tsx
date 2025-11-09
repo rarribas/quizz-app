@@ -2,8 +2,9 @@
 
 import Header from "./header";
 import Panel from "./panel";
+import MyScorePanel from "./MyScorePanel";
 import { Button } from "./button";
-import { TrophyIcon } from "lucide-react";
+import { TrophyIcon, RotateCcw } from "lucide-react";
 
 export default function LeaderBoard(){
   return(
@@ -15,27 +16,28 @@ export default function LeaderBoard(){
           icon={<TrophyIcon size={48} />}
         />
       </div>
-      <Panel className="bg-gradient-to-r from-blue-500 to-purple-500  w-full mb-5">
-        <div>
-          <header className="flex justify-between">
-            <h3 className="mb-4 text-white font-bold">Your Latest Score</h3>
-            <p className="text-white font-bold">Rank #3</p>
-          </header>
-          
-          <div className="flex justify-between">
-            <div className="flex items-center">
-              <p className="text-3xl font-bold text-white"> 30 </p>
-              <div className="mx-3">
-                <p className="text-sm text-white font-bold">5/10 correct</p>
-                <p className="text-sm text-white font-bold">30 seconds bonus</p>
-              </div>
-            </div>
-            <div>
-              <Button>Play Again</Button>
-            </div>
+      <MyScorePanel/>
+
+      <Panel className="w-full">
+        <h4 className="mb-4">Top 10 Leadeboard</h4>
+        <Panel className="flex justify-between items-center bg-gray-100 border-1 border-gray-300 w-full mb-4">
+          <div>
+            <p className="font-bold">QuizzMaster</p>
+            <p>9/10 correct - 32s bonus</p>
           </div>
-          
-        </div>
+          <div>
+            <p className="text-3xl font-bold">91</p>
+            <p> Points</p>
+          </div>
+        </Panel>
+
+        <Panel className="bg-gray-100 border-1 border-gray-300 w-full mb-4">
+          <div>
+            <p>QuizzMaster</p>
+            <p>9/10 correct - 32s bonus</p>
+          </div>
+        </Panel>
+
       </Panel>
     </div>
   )
