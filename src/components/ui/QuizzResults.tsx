@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 import {getNumberOfQuestionsWithCorrectAnswer, getTotalPoints} from "@/lib/quizz"
@@ -18,11 +18,17 @@ export default function QuizzResults(){
   const correctQuestions = getNumberOfQuestionsWithCorrectAnswer(questions);
   const totalPoints = getTotalPoints(questions, time)
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string>('')
+  const [error, setError] = useState<string>('');
+  // To prevent multiple saves, it'll persist in between renders
+  const hasSaved = useRef(false); 
+
   useEffect(() => {
     if(!completed){
       router.replace("/quizz/start")
     }
+
+    if (hasSaved.current) return;
+    hasSaved.current = true;
 
     startTransition(async () => {
       try{

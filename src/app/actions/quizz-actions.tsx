@@ -9,6 +9,7 @@ export async function saveQuizzResult(quizzData: QuizzResultI) {
 
 export async function getHighestScoresAction(): Promise<QuizzResultI[]> {
   const result = await getHighestScores();
+  console.log(result, "INSIDE ACTION")
 
   if (!result.success || !result.data) {
     return []; // or throw new Error(result.error)

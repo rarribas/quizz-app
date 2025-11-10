@@ -47,7 +47,7 @@ export async function getHighestScores(): Promise<QuizzResponse> {
     await connectToDatabase();
 
     // Fetch top 10 scores, only return the score field
-    const topScores = await QuizzResult.find({}, { score: 1, _id: 0 })
+    const topScores = await QuizzResult.find()
       .sort({ score: -1 })
       .limit(10)
       .lean(); // returns plain JS objects instead of Mongoose documents

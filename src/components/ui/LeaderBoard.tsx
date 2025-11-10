@@ -1,12 +1,39 @@
 'use client'
 
+import { useEffect, useTransition } from "react";
+import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 import Header from "./header";
 import Panel from "./panel";
 import MyScorePanel from "./MyScorePanel";
 import { Button } from "./button";
 import { TrophyIcon, RotateCcw } from "lucide-react";
-
+import {getNumberOfQuestionsWithCorrectAnswer, getTotalPoints} from "@/lib/quizz"
+import { getHighestScoresAction } from "@/app/actions/quizz-actions";
 export default function LeaderBoard(){
+  const {time, questions} = useQuizzStateStore();
+  const correctQuestions = getNumberOfQuestionsWithCorrectAnswer(questions);
+  const totalPoints = getTotalPoints(questions, time);
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    // if(!completed){
+    //   router.replace("/quizz/start")
+    // }
+
+    // if (hasSaved.current) return;
+    // hasSaved.current = true;
+
+    startTransition(async () => {
+      try{
+        const result = await getHighestScoresAction();
+        console.log(result);
+      }catch(e){
+        console.error(e);
+        // setError("Couldn't save your results, try again later")
+      }
+    })
+  },[])
+  
   return(
     <div className="flex flex-col w-3/5 mx-auto my-0">
       <div className="w-full mt-5">
@@ -16,7 +43,15 @@ export default function LeaderBoard(){
           icon={<TrophyIcon size={48} />}
         />
       </div>
-      <MyScorePanel/>
+      {/* <MyScorePanel 
+        score={totalPoints} 
+        numberCorrectAnswers={correctQuestions}
+        timeBonus={time}
+        action={<Button>
+          <RotateCcw/>
+          Play Again
+        </Button>}
+      /> */}
 
       <Panel className="w-full">
         <h4 className="mb-4">Top 10 Leadeboard</h4>
