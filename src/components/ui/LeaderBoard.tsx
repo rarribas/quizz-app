@@ -26,7 +26,7 @@ export default function LeaderBoard(){
 
   useEffect(() => {
     if(!completed){
-      router.replace("/quizz/start")
+      router.replace("/quizz")
       return;
     }
 
