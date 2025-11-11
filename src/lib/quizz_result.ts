@@ -7,15 +7,18 @@ export interface QuizzResultI {
   _id?: string;
   time: number;
   score: number;
-  numberOfCorrectAnswers: number
+  numberOfCorrectAnswers: number;
+  userEmail: string,
 }
+
+export type QuizzResultToSave = Omit<QuizzResultI, '_id' | 'userEmail'>;
 
 type QuizzResponse = 
   | { success: true, data?: QuizzResultI[] }
   | { success: false; error: string };
 
 export async function createQuizzResult(
-  quizzResult:QuizzResultI
+  quizzResult:QuizzResultToSave
 ):Promise<QuizzResponse>{
 
   try {
@@ -50,6 +53,7 @@ export async function getHighestScores(): Promise<QuizzResponse> {
     const topScores = await QuizzResult.find()
       .sort({ score: -1 })
       .limit(10)
+      .populate('userId', 'email') //find the user record in User and populates userid whith results
       .lean(); // returns plain JS objects instead of Mongoose documents
 
     const formattedScores: QuizzResultI[] = topScores.map(doc => ({
@@ -57,6 +61,7 @@ export async function getHighestScores(): Promise<QuizzResponse> {
       time: doc.time,
       score: doc.score,
       numberOfCorrectAnswers: doc.numberOfCorrectAnswers,
+      userEmail: doc.userId?.email || '',
     }));
     return { success: true, data: formattedScores };
   } catch (err) {

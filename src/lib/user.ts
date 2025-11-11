@@ -1,6 +1,11 @@
 import connectToDatabase from '@/lib/mongoose';
 import User from '@/models/User';
 
+export interface UserI {
+  _id?: string;
+  email: string;
+  password: string;
+}
 
 type UserResult = 
   | { success: true }

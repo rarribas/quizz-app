@@ -1,38 +1,54 @@
 'use client'
 
-import { useEffect, useTransition } from "react";
+import { useEffect, useTransition, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 import Header from "./header";
 import Panel from "./panel";
 import MyScorePanel from "./MyScorePanel";
+import ScorePanel from "./ScorePanel";
 import { Button } from "./button";
 import { TrophyIcon, RotateCcw } from "lucide-react";
 import {getNumberOfQuestionsWithCorrectAnswer, getTotalPoints} from "@/lib/quizz"
 import { getHighestScoresAction } from "@/app/actions/quizz-actions";
+import { QuizzResultI } from "@/lib/quizz_result";
+import Loading from "./Loading";
+import Error from "./Error";
+
 export default function LeaderBoard(){
-  const {time, questions} = useQuizzStateStore();
+  const router = useRouter();
+  const {completed, setCompleted, time, questions} = useQuizzStateStore();
   const correctQuestions = getNumberOfQuestionsWithCorrectAnswer(questions);
   const totalPoints = getTotalPoints(questions, time);
   const [isPending, startTransition] = useTransition();
+  const [quizzResults, setQuizzResults] = useState<QuizzResultI[]>([]);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    // if(!completed){
-    //   router.replace("/quizz/start")
-    // }
-
-    // if (hasSaved.current) return;
-    // hasSaved.current = true;
+    if(!completed){
+      router.replace("/quizz/start")
+      return;
+    }
 
     startTransition(async () => {
       try{
         const result = await getHighestScoresAction();
+        setQuizzResults(result);
         console.log(result);
       }catch(e){
         console.error(e);
-        // setError("Couldn't save your results, try again later")
+        setError("Couldn't save your results, try again later")
       }
     })
-  },[])
+  },[completed, router])
+
+  if(isPending) return <Loading/>
+  
+  if(error) return <Error errorMessage={error}/>
+
+  const onButtonClick = () => {
+    setCompleted(false);
+  }
   
   return(
     <div className="flex flex-col w-3/5 mx-auto my-0">
@@ -43,35 +59,31 @@ export default function LeaderBoard(){
           icon={<TrophyIcon size={48} />}
         />
       </div>
-      {/* <MyScorePanel 
+      <MyScorePanel 
         score={totalPoints} 
         numberCorrectAnswers={correctQuestions}
         timeBonus={time}
-        action={<Button>
-          <RotateCcw/>
-          Play Again
-        </Button>}
-      /> */}
+        action={
+          <Button
+           onClick={onButtonClick}
+          >
+            <RotateCcw/>
+            Play Again
+          </Button>
+        }
+      />
 
       <Panel className="w-full">
         <h4 className="mb-4">Top 10 Leadeboard</h4>
-        <Panel className="flex justify-between items-center bg-gray-100 border-1 border-gray-300 w-full mb-4">
-          <div>
-            <p className="font-bold">QuizzMaster</p>
-            <p>9/10 correct - 32s bonus</p>
-          </div>
-          <div>
-            <p className="text-3xl font-bold">91</p>
-            <p> Points</p>
-          </div>
-        </Panel>
-
-        <Panel className="bg-gray-100 border-1 border-gray-300 w-full mb-4">
-          <div>
-            <p>QuizzMaster</p>
-            <p>9/10 correct - 32s bonus</p>
-          </div>
-        </Panel>
+        {quizzResults.map((result, index) => (
+          <ScorePanel 
+            key={result._id || index}
+            score={result.score}
+            numberCorrectAnswers={result.numberOfCorrectAnswers}
+            timeBonus={result.time}
+            user={result.userEmail}
+          />
+        ))}
 
       </Panel>
     </div>
