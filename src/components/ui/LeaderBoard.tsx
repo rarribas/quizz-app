@@ -3,6 +3,7 @@
 import { useEffect, useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
+import { useQuizzConfigStore } from "@/store/useQuizzConfigStore";
 import Header from "./header";
 import Panel from "./panel";
 import MyScorePanel from "./MyScorePanel";
@@ -17,6 +18,7 @@ import Error from "./Error";
 
 export default function LeaderBoard(){
   const router = useRouter();
+    const {setConfiguration} = useQuizzConfigStore();
   const {completed, setCompleted, time, questions} = useQuizzStateStore();
   const correctQuestions = getNumberOfQuestionsWithCorrectAnswer(questions);
   const totalPoints = getTotalPoints(questions, time);
@@ -47,6 +49,8 @@ export default function LeaderBoard(){
   if(error) return <Error errorMessage={error}/>
 
   const onButtonClick = () => {
+    // Resets the quizz state and configuration to allow playing again
+    setConfiguration({ done: false, category: '', difficulty: ''});
     setCompleted(false);
   }
   

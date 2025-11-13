@@ -11,7 +11,7 @@ import {TrophyIcon} from "lucide-react";
 import { saveQuizzResult } from "@/app/actions/quizz-actions";
 import Error from "./Error";
 import Loading from "./Loading";
-import { Button } from "./button";
+import StyledLink from "./StyledLink";
 export default function QuizzResults(){
   const router = useRouter();
   const {completed, time, questions} = useQuizzStateStore();
@@ -48,14 +48,6 @@ export default function QuizzResults(){
 
   if(error) return <Error errorMessage={error}/>
 
-  const handleViewLeaderboard = () => {
-    // I could use a link here instead of the router but that was causing issues
-    // as apparently the completed flag was not being reset to true until the page was 
-    // hydrated and I was getting redirecting issues.
-    //completed was always false on the first load and couldn't see the page
-    router.push("/quizz/leaderboard");
-  };
-
   return(<div className="flex flex-col w-3/5 mx-auto my-0">
     <div className="w-full mt-5">
       <Header 
@@ -69,9 +61,7 @@ export default function QuizzResults(){
       score={totalPoints} 
       numberCorrectAnswers={correctQuestions}
       timeBonus={time}
-      action={<Button onClick={handleViewLeaderboard}>
-        View Leaderboard
-      </Button>}
+      action={<StyledLink href="/quizz/leaderboard">View Leaderboard</StyledLink>}
     />
 
     {questions.map((question) => {
