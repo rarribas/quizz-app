@@ -3,6 +3,7 @@
 import { 
   createQuizzResult, 
   getHighestScores, 
+  getRankingForScore,
   type QuizzResultI, 
   type QuizzResultToSave 
 } from "@/lib/quizz_result";
@@ -20,4 +21,14 @@ export async function getHighestScoresAction(): Promise<QuizzResultI[]> {
   }
 
   return result.data;
+}
+
+export async function getRanking(userScore: string): Promise<number | null> {
+  const result = await getRankingForScore(userScore);
+
+  if (!result.success || !result.rank) {
+    return null; // or throw new Error(result.error)
+  }
+
+  return result.rank;
 }

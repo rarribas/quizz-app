@@ -1,12 +1,12 @@
 import Panel from "./panel";
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
+import { getRanking } from "@/app/actions/quizz-actions";
 
 interface MyScorePanelI {
   score: number;
   numberCorrectAnswers: number;
   timeBonus: number;
   action?: ReactNode;
-  rank?: number;
 }
 
 export default function MyScorePanel({
@@ -14,14 +14,24 @@ export default function MyScorePanel({
   numberCorrectAnswers,
   timeBonus,
   action,
-  rank,
 }:MyScorePanelI){
+
+  const [ranking, setRanking] = useState<number | null>(null);
+  
+  useEffect(() => {
+    async function fetchRanking(){
+      const userRank =  await getRanking(score.toString());
+      setRanking(userRank);
+    }
+    fetchRanking();
+  },[score]);
+
   return (
     <Panel className="bg-gradient-to-r from-blue-500 to-purple-500  w-full mb-5">
       <div>
         <header className="flex justify-between">
           <h3 className="mb-4 text-white font-bold">Your Latest Score</h3>
-          {rank && <p className="text-white font-bold">{rank}</p>}
+          {ranking && <p className="text-white font-bold">Ranking #{ranking}</p>}
         </header>
         
         <div className="flex justify-between">

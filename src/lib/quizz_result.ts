@@ -14,7 +14,7 @@ export interface QuizzResultI {
 export type QuizzResultToSave = Omit<QuizzResultI, '_id' | 'userEmail'>;
 
 type QuizzResponse = 
-  | { success: true, data?: QuizzResultI[] }
+  | { success: true, data?: QuizzResultI[], rank?: number}
   | { success: false; error: string };
 
 export async function createQuizzResult(
@@ -67,5 +67,18 @@ export async function getHighestScores(): Promise<QuizzResponse> {
   } catch (err) {
     console.error("Error fetching highest scores:", err);
     return { success: false, error: "Failed to fetch highest scores" };
+  }
+}
+
+export async function getRankingForScore(userScore: string): Promise<QuizzResponse> {
+  try {
+    // Connect to the database
+    await connectToDatabase();
+
+    const count = await QuizzResult.countDocuments({ score: { $gt: userScore } });
+    return { success: true, rank: count + 1}; // Return rank as score
+  }catch(err){
+    console.error("Error fetching highest scores:", err);
+    return { success: false, error: "Failed to fetch user ranking" };
   }
 }
