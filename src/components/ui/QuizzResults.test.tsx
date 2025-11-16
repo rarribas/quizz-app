@@ -15,6 +15,8 @@ jest.mock("@/store/useQuizzConfigStore");
 
 jest.mock("@/app/actions/quizz-actions", () => ({
   saveQuizzResult: jest.fn(),
+  getHighestScoresAction: jest.fn(),
+  getRanking: jest.fn(),
 }));
 
 jest.mock('uuid', () => ({
