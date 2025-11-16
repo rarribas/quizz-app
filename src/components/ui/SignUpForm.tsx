@@ -76,6 +76,22 @@ const SignUpForm = () => {
         <div>
           <Label 
             className="mb-3 font-semibold" 
+            htmlFor="userName">
+              <UserIcon size={14} className="inline" />
+              User Name:
+          </Label>
+          <Input 
+            type='text' 
+            name='userName'
+            id='userName'
+            placeholder="Insert your User Name"
+            disabled={isPending}
+            className="mb-3"
+          />
+        </div>
+        <div>
+          <Label 
+            className="mb-3 font-semibold" 
             htmlFor="password">
               <LockIcon size={14} className="inline" />
               Password:

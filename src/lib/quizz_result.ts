@@ -8,7 +8,7 @@ export interface QuizzResultI {
   time: number;
   score: number;
   numberOfCorrectAnswers: number;
-  userEmail: string,
+  userName: string,
   isCurrentUser?: boolean;
 }
 
@@ -59,7 +59,7 @@ export async function getHighestScores(): Promise<QuizzResponse> {
     const topScores = await QuizzResult.find()
       .sort({ score: -1 })
       .limit(10)
-      .populate('userId', 'email') //find the user record in User and populates userid whith results
+      .populate('userId', 'userName') //find the user record in User and populates userid whith results
       .lean(); // returns plain JS objects instead of Mongoose documents
 
     const formattedScores: QuizzResultI[] = topScores.map(doc => ({
@@ -67,7 +67,7 @@ export async function getHighestScores(): Promise<QuizzResponse> {
       time: doc.time,
       score: doc.score,
       numberOfCorrectAnswers: doc.numberOfCorrectAnswers,
-      userEmail: doc.userId?.email || '',
+      userName: doc.userId?.userName || '',
       isCurrentUser: doc.userId?._id.toString() === session.user.id
     }));
     return { success: true, data: formattedScores };

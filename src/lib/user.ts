@@ -13,13 +13,14 @@ type UserResult =
 
 export async function createUser(
   email: string, 
-  password: string
+  password: string,
+  userName: string
 ): Promise<UserResult> {
 
   try {
     await connectToDatabase();
 
-    const newUser = new User({ email, password });
+    const newUser = new User({ email, password, userName });
     await newUser.save();
 
     return { success: true };

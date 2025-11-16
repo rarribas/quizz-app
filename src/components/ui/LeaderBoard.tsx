@@ -90,7 +90,7 @@ export default function LeaderBoard(){
             score={result.score}
             numberCorrectAnswers={result.numberOfCorrectAnswers}
             timeBonus={result.time}
-            user={result.userEmail}
+            user={result.userName}
             isCurrentUser={result.isCurrentUser}
           />
         ))}
