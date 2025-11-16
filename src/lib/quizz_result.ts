@@ -9,6 +9,7 @@ export interface QuizzResultI {
   score: number;
   numberOfCorrectAnswers: number;
   userEmail: string,
+  isCurrentUser?: boolean;
 }
 
 export type QuizzResultToSave = Omit<QuizzResultI, '_id' | 'userEmail'>;
@@ -46,6 +47,11 @@ export async function createQuizzResult(
 
 export async function getHighestScores(): Promise<QuizzResponse> {
   try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return { success: false, error: "User not authenticated" };
+    }
     // Connect to the database
     await connectToDatabase();
 
@@ -62,6 +68,7 @@ export async function getHighestScores(): Promise<QuizzResponse> {
       score: doc.score,
       numberOfCorrectAnswers: doc.numberOfCorrectAnswers,
       userEmail: doc.userId?.email || '',
+      isCurrentUser: doc.userId?._id.toString() === session.user.id
     }));
     return { success: true, data: formattedScores };
   } catch (err) {

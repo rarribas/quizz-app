@@ -5,6 +5,7 @@ interface ScorePanelI {
   numberCorrectAnswers: number;
   timeBonus: number;
   user: string;
+  isCurrentUser?: boolean;
 }
 
 export default function ScorePanel({
@@ -12,11 +13,20 @@ export default function ScorePanel({
   numberCorrectAnswers,
   timeBonus,
   user,
+  isCurrentUser,
 }:ScorePanelI){
+  let classList ='flex items-center justify-between border-1 w-full mb-4';
+
+  if(isCurrentUser){
+    classList += ' bg-blue-100 border-blue-300';
+  }else{
+    classList += ' bg-gray-100 border-gray-300';
+  }
+
   return(
-    <Panel className="flex items-center justify-between bg-gray-100 border-1 border-gray-300 w-full mb-4">
+    <Panel className={classList}>
       <div>
-        <p>{user}</p>
+        <p className="font-bold">{isCurrentUser ? 'You' : user}</p>
         <p>{numberCorrectAnswers}/10 correct - {timeBonus}s bonus</p>
       </div>
       <div>

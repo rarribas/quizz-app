@@ -15,11 +15,12 @@ import { getHighestScoresAction } from "@/app/actions/quizz-actions";
 import { QuizzResultI } from "@/lib/quizz_result";
 import Loading from "./Loading";
 import Error from "./Error";
+import { Medal } from "lucide-react";
 
 export default function LeaderBoard(){
   const router = useRouter();
-    const {setConfiguration} = useQuizzConfigStore();
-  const {completed, setCompleted, time, questions} = useQuizzStateStore();
+  const {setConfiguration} = useQuizzConfigStore();
+  const {completed, setCompleted, time, setTime, questions} = useQuizzStateStore();
   const correctQuestions = getNumberOfQuestionsWithCorrectAnswer(questions);
   const totalPoints = getTotalPoints(questions, time);
   const [isPending, startTransition] = useTransition();
@@ -36,7 +37,6 @@ export default function LeaderBoard(){
       try{
         const result = await getHighestScoresAction();
         setQuizzResults(result);
-        console.log(result);
       }catch(e){
         console.error(e);
         setError("Couldn't save your results, try again later")
@@ -52,6 +52,7 @@ export default function LeaderBoard(){
     // Resets the quizz state and configuration to allow playing again
     setConfiguration({ done: false, category: '', difficulty: ''});
     setCompleted(false);
+    setTime(120);
   }
   
   return(
@@ -78,7 +79,11 @@ export default function LeaderBoard(){
       />
 
       <Panel className="w-full">
-        <h4 className="mb-4">Top 10 Leadeboard</h4>
+        <header className="flex items-center mb-4 gap-2">
+          <Medal size={14}/>
+          <h4 className="font-bold">Top 10 Leadeboard</h4>
+        </header>
+      
         {quizzResults.map((result, index) => (
           <ScorePanel 
             key={result._id || index}
@@ -86,6 +91,7 @@ export default function LeaderBoard(){
             numberCorrectAnswers={result.numberOfCorrectAnswers}
             timeBonus={result.time}
             user={result.userEmail}
+            isCurrentUser={result.isCurrentUser}
           />
         ))}
 
