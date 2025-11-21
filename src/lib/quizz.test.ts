@@ -1,5 +1,5 @@
 import { mockedQuestions, mockedFinalQuestions, mockedFinalQuestionsAllRight } from "@/data/questions";
-import {shuffleAnswers, findSelectedAnswer, getTotalPoints} from "./quizz";
+import {shuffleAnswers, findSelectedAnswer, getFinalScore} from "./quizz";
 
 jest.mock('uuid', () => ({
   v4: jest.fn(() => 'mock-uuid'),
@@ -26,13 +26,13 @@ describe("Quizz Helpers", () => {
 
   it('should get a number of points equals to right answers when right answers are less than 5', () => {
     const time = 30; // 30 seconds remaining
-    const points = getTotalPoints(mockedFinalQuestions, time);
+    const {points} = getFinalScore(mockedFinalQuestions, time);
     expect(points).toBe(3);
   });
 
   it('should get a number of points with bonus when right answers are more or equal to 5', () => {
     const time = 30; // 30 seconds remaining
-    const points = getTotalPoints(mockedFinalQuestionsAllRight, time);
+    const {points} = getFinalScore(mockedFinalQuestionsAllRight, time);
     expect(points).toBe(35);
   });
 });

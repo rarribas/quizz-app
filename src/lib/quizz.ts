@@ -2,6 +2,11 @@ import { QuestionI, ModifiedQuestionI } from "@/types/question";
 import he from "he";
 import { v4 as uuidv4 } from 'uuid';
 
+interface FinalScoreI {
+  correctQuestions: number;
+  points: number;
+}
+
 export const getToken = async (): Promise<string | null> => {
   try {
     const res = await fetch("https://opentdb.com/api_token.php?command=request");
@@ -70,18 +75,22 @@ export const filterByCorrectAnswerSelected = (questions: ModifiedQuestionI[]):Mo
   });
 }
 
+// TODO: Refactor these to use the same method
 export const getNumberOfQuestionsWithCorrectAnswer = (questions: ModifiedQuestionI[]):number => {
   const rigthQuestions = filterByCorrectAnswerSelected(questions);
   return rigthQuestions.length;
 }
 
-export const getTotalPoints = (questions: ModifiedQuestionI[], remainingTime:number):number => {
-  const numberOfRightQuestions = getNumberOfQuestionsWithCorrectAnswer(questions);
-  let points = numberOfRightQuestions;
+export const getFinalScore = (questions: ModifiedQuestionI[], remainingTime:number):FinalScoreI => {
+  const correctQuestions = getNumberOfQuestionsWithCorrectAnswer(questions);
+  let points = correctQuestions;
 
   if(points >= 5){
     points += remainingTime;
   }
 
-  return points;
+  return {
+    correctQuestions,
+    points,
+  };
 }

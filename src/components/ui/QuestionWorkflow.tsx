@@ -12,6 +12,7 @@ import {Progress} from "./progress";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 import CountDown from "./Countdown";
 import { hasAnswerSelected } from "@/lib/quizz";
+
 export default function QuestionWorkflow(){
   const {configuration} = useQuizzConfigStore();
   const router = useRouter();
@@ -20,6 +21,8 @@ export default function QuestionWorkflow(){
   const {loading, error} = useFetchQuestions();
 
 
+  // TODO: Wrap this in a higher order component to do the redirect
+  // export default WithAuth(LoginForm, properties here );
   useEffect(() =>{
     if(!configuration || !configuration.done){
       router.replace("/quizz");
@@ -39,6 +42,7 @@ export default function QuestionWorkflow(){
   const onNextButtonClick = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     ev.preventDefault();
     if(questionIndex + 1 === 10) {
+      // TODO - Save the results in here
       setCompleted(true)
       return;
     }

@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
-import {getNumberOfQuestionsWithCorrectAnswer, getTotalPoints} from "@/lib/quizz"
+import { getFinalScore } from "@/lib/quizz"
 import Header from "./header";
 import QuestionPanel from "./QuestionPanel";
 import MyScorePanel from "./MyScorePanel";
@@ -15,8 +15,7 @@ import StyledLink from "./StyledLink";
 export default function QuizzResults(){
   const router = useRouter();
   const {completed, time, questions} = useQuizzStateStore();
-  const correctQuestions = getNumberOfQuestionsWithCorrectAnswer(questions);
-  const totalPoints = getTotalPoints(questions, time)
+  const {correctQuestions, points} = getFinalScore(questions, time);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string>('');
   // To prevent multiple saves, it'll persist in between renders
@@ -30,11 +29,12 @@ export default function QuizzResults(){
     if (hasSaved.current) return;
     hasSaved.current = true;
 
+    // Move this logic to the QuestionWorkflow
     startTransition(async () => {
       try{
         await saveQuizzResult({
           time,
-          score: totalPoints,
+          score: points,
           numberOfCorrectAnswers: correctQuestions,
         });
       }catch(e){
@@ -42,7 +42,7 @@ export default function QuizzResults(){
         setError("Couldn't save your results, try again later")
       }
     })
-  },[completed, router, time, totalPoints, correctQuestions])
+  },[completed, router, time, points, correctQuestions])
 
   if(isPending) return <Loading/>
 
@@ -58,7 +58,7 @@ export default function QuizzResults(){
     </div>
 
     <MyScorePanel 
-      score={totalPoints} 
+      score={points} 
       numberCorrectAnswers={correctQuestions}
       timeBonus={time}
       action={<StyledLink href="/quizz/leaderboard">View Leaderboard</StyledLink>}

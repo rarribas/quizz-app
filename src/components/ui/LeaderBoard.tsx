@@ -10,7 +10,7 @@ import MyScorePanel from "./MyScorePanel";
 import ScorePanel from "./ScorePanel";
 import { Button } from "./button";
 import { TrophyIcon, RotateCcw } from "lucide-react";
-import {getNumberOfQuestionsWithCorrectAnswer, getTotalPoints} from "@/lib/quizz"
+import { getFinalScore } from "@/lib/quizz"
 import { getHighestScoresAction } from "@/app/actions/quizz-actions";
 import { QuizzResultI } from "@/lib/quizz_result";
 import Loading from "./Loading";
@@ -21,8 +21,7 @@ export default function LeaderBoard(){
   const router = useRouter();
   const {setConfiguration} = useQuizzConfigStore();
   const {completed, setCompleted, time, setTime, questions} = useQuizzStateStore();
-  const correctQuestions = getNumberOfQuestionsWithCorrectAnswer(questions);
-  const totalPoints = getTotalPoints(questions, time);
+  const {correctQuestions, points} = getFinalScore(questions, time);
   const [isPending, startTransition] = useTransition();
   const [quizzResults, setQuizzResults] = useState<QuizzResultI[]>([]);
   const [error, setError] = useState<string>('');
@@ -65,7 +64,7 @@ export default function LeaderBoard(){
         />
       </div>
       <MyScorePanel 
-        score={totalPoints} 
+        score={points} 
         numberCorrectAnswers={correctQuestions}
         timeBonus={time}
         action={

@@ -7,7 +7,7 @@ import {
   mockUseQuizzStateStore 
 } from "@/app/quizz/tests/mocks";
 import { saveQuizzResult } from "@/app/actions/quizz-actions";
-import { getTotalPoints, getNumberOfQuestionsWithCorrectAnswer } from "@/lib/quizz";
+import { getFinalScore } from "@/lib/quizz"
 
 jest.mock("@/store/useQuizzStateStore");
 jest.mock("@/store/useQuizzCategoriesStore");
@@ -110,16 +110,15 @@ describe("Quizz Results", () => {
       time: 30,
     });
 
-    const expectedScore = getTotalPoints(mockedFinalQuestionsAllRight, 30);
-    const expectedCorrect = getNumberOfQuestionsWithCorrectAnswer(mockedFinalQuestionsAllRight);
+    const {correctQuestions, points} = getFinalScore(mockedFinalQuestionsAllRight, 30);
 
     render(<QuizzResults />);
 
     await waitFor(() => {
       expect(saveQuizzResult).toHaveBeenCalledWith({
         time: 30,
-        score: expectedScore,
-        numberOfCorrectAnswers: expectedCorrect,
+        score: points,
+        numberOfCorrectAnswers: correctQuestions,
       });
     });
   });
