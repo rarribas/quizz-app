@@ -12,7 +12,7 @@ export interface QuizzResultI {
   isCurrentUser?: boolean;
 }
 
-export type QuizzResultToSave = Omit<QuizzResultI, '_id' | 'userEmail'>;
+export type QuizzResultToSave = Omit<QuizzResultI, '_id' | 'userName'>;
 
 type QuizzResponse = 
   | { success: true, data?: QuizzResultI[], rank?: number}

@@ -1,4 +1,4 @@
-import { render, waitFor } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import QuizzResults from "./QuizzResults";
 import { mockedFinalQuestionsAllRight } from "@/data/questions";
 import { 
@@ -6,15 +6,12 @@ import {
   mockUseQuizzConfigStore, 
   mockUseQuizzStateStore 
 } from "@/app/quizz/tests/mocks";
-import { saveQuizzResult } from "@/app/actions/quizz-actions";
-import { getFinalScore } from "@/lib/quizz"
 
 jest.mock("@/store/useQuizzStateStore");
 jest.mock("@/store/useQuizzCategoriesStore");
 jest.mock("@/store/useQuizzConfigStore");
 
 jest.mock("@/app/actions/quizz-actions", () => ({
-  saveQuizzResult: jest.fn(),
   getHighestScoresAction: jest.fn(),
   getRanking: jest.fn(),
 }));
@@ -52,7 +49,6 @@ jest.mock("react", () => {
   };
 });
 
-
 describe("Quizz Results", () => {
   const mockFetchCategories = jest.fn();
   const mockSetConfiguration = jest.fn();
@@ -73,9 +69,6 @@ describe("Quizz Results", () => {
   });
 
   it("renders with the right results", () => {
-    (saveQuizzResult as jest.Mock).mockResolvedValue({
-      success: true,
-    });
     mockUseQuizzStateStore.mockReturnValue({
       questions: mockedFinalQuestionsAllRight,
       completed: true,
@@ -100,29 +93,6 @@ describe("Quizz Results", () => {
     getByText('What zodiac sign is represented by a pair of scales?');
     getByText('The Great Wall of China is visible from the moon.');
   });
-
-  it("calls saveQuizzResult with the right data", async () => {
-    (saveQuizzResult as jest.Mock).mockResolvedValue({ success: true });
-
-    mockUseQuizzStateStore.mockReturnValue({
-      questions: mockedFinalQuestionsAllRight,
-      completed: true,
-      time: 30,
-    });
-
-    const {correctQuestions, points} = getFinalScore(mockedFinalQuestionsAllRight, 30);
-
-    render(<QuizzResults />);
-
-    await waitFor(() => {
-      expect(saveQuizzResult).toHaveBeenCalledWith({
-        time: 30,
-        score: points,
-        numberOfCorrectAnswers: correctQuestions,
-      });
-    });
-  });
-
 
   it('redirects to /quizz/start if configuration not done', () => {
     const setQuestions = jest.fn();

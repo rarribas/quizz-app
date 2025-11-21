@@ -1,7 +1,9 @@
 'use client'
 
 import { useQuizzConfigStore } from "@/store/useQuizzConfigStore"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { saveQuizzResult } from "@/app/actions/quizz-actions";
+import { getFinalScore } from "@/lib/quizz"
 import { useRouter } from "next/navigation";
 import Loading from "./Loading";
 import Error from "./Error";
@@ -17,9 +19,10 @@ export default function QuestionWorkflow(){
   const {configuration} = useQuizzConfigStore();
   const router = useRouter();
   const [questionIndex, setQuestionIndex] = useState<number>(0);
-  const {questions, completed, setCompleted} = useQuizzStateStore();
+  const [isPending, startTransition] = useTransition();
+  const [savingError, setSavingError] = useState<string>('');
+  const {questions, completed, time, setCompleted} = useQuizzStateStore();
   const {loading, error} = useFetchQuestions();
-
 
   // TODO: Wrap this in a higher order component to do the redirect
   // export default WithAuth(LoginForm, properties here );
@@ -35,15 +38,30 @@ export default function QuestionWorkflow(){
   },[configuration, completed, router])
 
   if(!configuration || !configuration.done) return null;
-  if(loading) return <Loading/>
+  if(loading || isPending) return <Loading/>
   if(error) return <Error errorMessage={error}/>
+  if(savingError) return <Error errorMessage={savingError}/>
   if(!questions)return <Error errorMessage={"Something wrong loading the questions"}/>
 
   const onNextButtonClick = (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     ev.preventDefault();
     if(questionIndex + 1 === 10) {
-      // TODO - Save the results in here
-      setCompleted(true)
+      const {correctQuestions, points} = getFinalScore(questions, time);
+      startTransition(async () => {
+        try{
+          await saveQuizzResult({
+            time,
+            score: points,
+            numberOfCorrectAnswers: correctQuestions,
+          });
+          
+          setCompleted(true)
+        }catch(e){
+          console.error(e);
+          setSavingError("Couldn't save your results, try again later")
+        }
+      })
+      
       return;
     }
     setQuestionIndex(prevIndex => prevIndex + 1);

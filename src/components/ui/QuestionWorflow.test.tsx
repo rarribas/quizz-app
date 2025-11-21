@@ -11,12 +11,18 @@ jest.mock('uuid', () => ({
   v4: jest.fn(() => 'mock-uuid'),
 }));
 
- jest.mock('@/hooks/useFetchQuestions', () => ({
+jest.mock('@/hooks/useFetchQuestions', () => ({
   __esModule: true,
   default: jest.fn(() => ({
     loading: false,
     error: null,
   })),
+}));
+
+jest.mock("@/app/actions/quizz-actions", () => ({
+  saveQuizzResult: jest.fn(),
+  getHighestScoresAction: jest.fn(),
+  getRanking: jest.fn(),
 }));
 
 const mockReplace = jest.fn();
@@ -113,5 +119,6 @@ describe('Question Workflow', () => {
   
   it("Sets quizz to completed when last question done", () => {
     // TODO Test this in Cypress
+    // Not sure how to test the save
   });
 });
