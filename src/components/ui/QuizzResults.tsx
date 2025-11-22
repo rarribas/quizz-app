@@ -10,7 +10,7 @@ import StyledLink from "./StyledLink";
 import { WithCompletitionRedirect } from "../WithCompletitionRedirect";
 const QuizzResults = () => {
   const {time, questions} = useQuizzStateStore();
-  const {correctQuestions, points} = getFinalScore(questions, time);
+  const {correctQuestions, points, bonus} = getFinalScore(questions, time);
 
   return(<div className="flex flex-col w-3/5 mx-auto my-0">
     <div className="w-full mt-5">
@@ -24,7 +24,7 @@ const QuizzResults = () => {
     <MyScorePanel 
       score={points} 
       numberCorrectAnswers={correctQuestions}
-      timeBonus={time}
+      timeBonus={bonus}
       action={<StyledLink href="/quizz/leaderboard">View Leaderboard</StyledLink>}
     />
 

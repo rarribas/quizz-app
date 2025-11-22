@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 interface FinalScoreI {
   correctQuestions: number;
   points: number;
+  bonus: number
 }
 
 export const getToken = async (): Promise<string | null> => {
@@ -92,5 +93,6 @@ export const getFinalScore = (questions: ModifiedQuestionI[], remainingTime:numb
   return {
     correctQuestions,
     points,
+    bonus: points >= 5 ? remainingTime : 0,
   };
 }

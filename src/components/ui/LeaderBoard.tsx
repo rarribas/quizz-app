@@ -22,7 +22,7 @@ const LeaderBoard = () => {
   const router = useRouter();
   const {setConfiguration} = useQuizzConfigStore();
   const {setCompleted, time, setTime, questions} = useQuizzStateStore();
-  const {correctQuestions, points} = getFinalScore(questions, time);
+  const {correctQuestions, points, bonus} = getFinalScore(questions, time);
   const [isPending, startTransition] = useTransition();
   const [quizzResults, setQuizzResults] = useState<QuizzResultI[]>([]);
   const [error, setError] = useState<string>('');
@@ -62,7 +62,7 @@ const LeaderBoard = () => {
       <MyScorePanel 
         score={points} 
         numberCorrectAnswers={correctQuestions}
-        timeBonus={time}
+        timeBonus={bonus}
         action={
           <Button
            onClick={onButtonClick}
@@ -84,7 +84,7 @@ const LeaderBoard = () => {
             key={result._id || index}
             score={result.score}
             numberCorrectAnswers={result.numberOfCorrectAnswers}
-            timeBonus={result.time}
+            timeBonus={result.numberOfCorrectAnswers >= 5 ? result.time : 0}
             user={result.userName}
             isCurrentUser={result.isCurrentUser}
           />
