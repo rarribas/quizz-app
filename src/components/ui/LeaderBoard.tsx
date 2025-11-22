@@ -16,22 +16,18 @@ import { QuizzResultI } from "@/lib/quizz_result";
 import Loading from "./Loading";
 import Error from "./Error";
 import { Medal } from "lucide-react";
+import { WithCompletitionRedirect } from "../WithCompletitionRedirect";
 
-export default function LeaderBoard(){
+const LeaderBoard = () => {
   const router = useRouter();
   const {setConfiguration} = useQuizzConfigStore();
-  const {completed, setCompleted, time, setTime, questions} = useQuizzStateStore();
+  const {setCompleted, time, setTime, questions} = useQuizzStateStore();
   const {correctQuestions, points} = getFinalScore(questions, time);
   const [isPending, startTransition] = useTransition();
   const [quizzResults, setQuizzResults] = useState<QuizzResultI[]>([]);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    if(!completed){
-      router.replace("/quizz")
-      return;
-    }
-
     startTransition(async () => {
       try{
         const result = await getHighestScoresAction();
@@ -41,7 +37,7 @@ export default function LeaderBoard(){
         setError("Couldn't save your results, try again later")
       }
     })
-  },[completed, router])
+  },[router])
 
   if(isPending) return <Loading/>
   
@@ -98,3 +94,6 @@ export default function LeaderBoard(){
     </div>
   )
 }
+
+export const RawLeaderboard = LeaderBoard;
+export default WithCompletitionRedirect(LeaderBoard, '/quizz')

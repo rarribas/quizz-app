@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useQuizzStateStore } from "@/store/useQuizzStateStore";
 import { getFinalScore } from "@/lib/quizz"
 import Header from "./header";
@@ -9,18 +7,10 @@ import QuestionPanel from "./QuestionPanel";
 import MyScorePanel from "./MyScorePanel";
 import {TrophyIcon} from "lucide-react";
 import StyledLink from "./StyledLink";
-export default function QuizzResults(){
-  const router = useRouter();
-  const {completed, time, questions} = useQuizzStateStore();
+import { WithCompletitionRedirect } from "../WithCompletitionRedirect";
+const QuizzResults = () => {
+  const {time, questions} = useQuizzStateStore();
   const {correctQuestions, points} = getFinalScore(questions, time);
-
-  useEffect(() => {
-    if(!completed){
-      router.replace("/quizz/start")
-    }
-
-  },[completed, router])
-
 
   return(<div className="flex flex-col w-3/5 mx-auto my-0">
     <div className="w-full mt-5">
@@ -43,3 +33,6 @@ export default function QuizzResults(){
     })}
   </div>)
 }
+
+export const RawQuizzResults = QuizzResults;
+export default WithCompletitionRedirect(QuizzResults, '/quizz/start')
