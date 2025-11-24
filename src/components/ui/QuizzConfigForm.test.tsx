@@ -17,19 +17,20 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
+const mockedCategories =  [{ id: "1", name: "General Knowledge" }];
+
 describe("Quizz Configuration Form", () => {
 
   // mock stores
-  const mockFetchCategories = jest.fn();
   const mockSetConfiguration = jest.fn();
+  const mockSetCategories = jest.fn();
   
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseQuizzCategoriesStore.mockReturnValue({
-      categories: [{ id: "1", name: "General Knowledge" }],
+      categories: mockedCategories,
+      setCategories: mockSetCategories,
       difficulty: { easy: "Easy", medium: "Medium", hard: "Hard" },
-      loading: false,
-      fetchCategories: mockFetchCategories,
     });
 
     mockUseQuizzConfigStore.mockReturnValue({
@@ -43,7 +44,7 @@ describe("Quizz Configuration Form", () => {
   });
 
   it("shows errors if missing values", () => {
-    const { getByText } = render(<QuizzConfigForm />);
+    const { getByText } = render(<QuizzConfigForm categories={mockedCategories} />);
     
     const submitButton  = getByText("Start Quizz");
     fireEvent.click(submitButton);
@@ -54,7 +55,7 @@ describe("Quizz Configuration Form", () => {
 
   it("saves the correct values in configuration", async () => {
     const user = userEvent.setup();
-    const {getByText, getByRole} = render(<QuizzConfigForm />);
+    const {getByText, getByRole} = render(<QuizzConfigForm categories={mockedCategories} />);
 
     // Open category dropdown and select
     const categoryTrigger = getByText("Insert Category").closest('button');
@@ -87,7 +88,7 @@ describe("Quizz Configuration Form", () => {
       setConfiguration: mockSetConfiguration,
     });
 
-    render(<QuizzConfigForm />);
+    render(<QuizzConfigForm categories={mockedCategories}/>);
 
     // The useEffect should call router.replace immediately
     expect(mockReplace).toHaveBeenCalledWith("/quizz/start");

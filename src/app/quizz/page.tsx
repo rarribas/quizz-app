@@ -1,6 +1,11 @@
 import QuizzConfigForm from "@/components/ui/QuizzConfigForm"
-export default function QuizzPage(){
-  return (<div className="w-screen h-screen bg-purple-100">
-    <QuizzConfigForm/>
-  </div>)
+import { fetchCategories } from "../actions/quizz-actions";
+export default async function QuizzPage(){
+  const categories = await fetchCategories();
+
+  return (
+    <div className="w-screen h-screen bg-purple-100">
+      <QuizzConfigForm categories={categories}/>
+    </div>
+  )
 }

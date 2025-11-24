@@ -2,7 +2,6 @@
 import Panel from "./panel";
 import Header from "./header";
 import QuizzDetails from "./QuizzDetails";
-import Loading from "./Loading";
 import { Button } from "./button";
 import { Label } from "@/components/ui/label";
 import {
@@ -13,14 +12,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ChevronRight } from "lucide-react";
-import { useQuizzCategoriesStore, DifficultyKey } from "@/store/useQuizzCategoriesStore";
+import { useQuizzCategoriesStore, DifficultyKey, type QuizzCategoriesI } from "@/store/useQuizzCategoriesStore";
 import { useQuizzConfigStore } from "@/store/useQuizzConfigStore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 type ErrorField = 'category' | 'difficulty';
-
-export default function QuizzConfigForm(){
-  const {categories, difficulty, loading, fetchCategories} = useQuizzCategoriesStore();
+type QuizzConfigFormProps = {
+  categories: QuizzCategoriesI[];
+};
+export default function QuizzConfigForm({categories}:QuizzConfigFormProps){
+  const {difficulty, setCategories} = useQuizzCategoriesStore();
   const {configuration, setConfiguration} = useQuizzConfigStore();
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<DifficultyKey | "">("");
@@ -35,10 +36,9 @@ export default function QuizzConfigForm(){
        return router.replace("/quizz/start");
     }
 
-    fetchCategories()
-  },[fetchCategories, configuration, router]);
+    setCategories(categories);
+  },[categories, setCategories, configuration, router]);
 
-  if(loading) return <Loading/>
   if(configuration?.done) return null; 
 
   const onFormSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
@@ -82,8 +82,6 @@ export default function QuizzConfigForm(){
 
     setSelectedCategory(value)
   }
-
-  const selectedCategoryObj = categories.find(cat => cat.id === selectedCategory);
 
   return(
     <div className="pt-6">

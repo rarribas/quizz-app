@@ -8,6 +8,25 @@ import {
   type QuizzResultToSave 
 } from "@/lib/quizz_result";
 
+import { type QuizzCategoriesI } from "@/store/useQuizzCategoriesStore";
+
+const CAT_URL:string = "https://opentdb.com/api_category.php";
+
+export async function fetchCategories(): Promise<QuizzCategoriesI[]> {
+  try {
+    const res = await fetch(CAT_URL, {
+      next: { revalidate: 3600 },
+    });
+
+    const data = await res.json();
+    return data.trivia_categories ?? [];
+  } catch (error) {
+    console.error("fetchCategories error:", error);
+    return [];
+  }
+}
+
+
 export async function saveQuizzResult(quizzData: QuizzResultToSave) {
   const result = await createQuizzResult(quizzData);
   return result;
