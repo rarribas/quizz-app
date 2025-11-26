@@ -36,7 +36,7 @@ export async function getHighestScoresAction(): Promise<QuizzResultI[]> {
   const result = await getHighestScores();
 
   if (!result.success || !result.data) {
-    return []; // or throw new Error(result.error)
+    return [];
   }
 
   return result.data;
@@ -46,7 +46,7 @@ export async function getRanking(userScore: string): Promise<number | null> {
   const result = await getRankingForScore(userScore);
 
   if (!result.success || !result.rank) {
-    return null; // or throw new Error(result.error)
+    return null;
   }
 
   return result.rank;
