@@ -9,7 +9,10 @@ interface PanelI{
 function Panel({ children, className }: PanelI) {
   return (
     <div className="flex justify-center">
-      <div className={cn("bg-white p-6 rounded shadow", className)}>
+      <div 
+        className={cn("bg-white p-6 rounded shadow", className)}
+        data-testid="panel-test"
+      >
         {children}
       </div>
     </div>
