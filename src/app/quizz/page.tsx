@@ -1,11 +1,11 @@
-import QuizzConfigForm from "@/components/ui/QuizzConfigForm"
-import { fetchCategories } from "../actions/quizz-actions";
-export default async function QuizzPage(){
-  const categories = await fetchCategories();
+import { Suspense } from "react";
+import ConfigurationLoader from "@/components/ConfigurationLoader";
+import Loading from "@/components/ui/Loading";
 
+export default async function Page(){
   return (
-    <div className="w-screen h-screen bg-purple-100">
-      <QuizzConfigForm categories={categories}/>
-    </div>
+    <Suspense fallback={<Loading/>}>
+      <ConfigurationLoader/>
+    </Suspense>
   )
 }
