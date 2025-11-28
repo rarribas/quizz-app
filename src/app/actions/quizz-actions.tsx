@@ -22,7 +22,8 @@ export async function fetchCategories(): Promise<QuizzCategoriesI[]> {
     return data.trivia_categories ?? [];
   } catch (error) {
     console.error("fetchCategories error:", error);
-    return [];
+    throw new Error("Error while fetching categories. Please try again later")
+    // return [];
   }
 }
 
