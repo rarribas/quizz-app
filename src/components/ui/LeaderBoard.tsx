@@ -66,6 +66,7 @@ const LeaderBoard = () => {
         action={
           <Button
            onClick={onButtonClick}
+           data-testid="play-again-test"
           >
             <RotateCcw/>
             Play Again

@@ -1,6 +1,8 @@
-import { render } from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import { mockedFinalQuestionsAllRight } from "@/data/questions";
 import LeaderBoard from "./LeaderBoard";
+import { getHighestScoresAction } from "@/app/actions/quizz-actions";
+import { mockResults } from "@/data/results";
 
 import { 
   mockUseQuizzConfigStore, 
@@ -29,6 +31,7 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
+
 jest.mock("react", () => {
   const actualReact = jest.requireActual("react");
   return {
@@ -55,6 +58,8 @@ describe('Leaderboard', () => {
       questions: mockedFinalQuestionsAllRight,
       completed: true,
       time: 30,
+      setCompleted: jest.fn(),
+      setTime: jest.fn(),
     });
   });
 
@@ -66,6 +71,31 @@ describe('Leaderboard', () => {
     expect(getByText('30 seconds bonus')).toBeInTheDocument();
     expect(getByText('35')).toBeInTheDocument();
   });
-  it('renders all the score panels', () => {});
-  it('redirects to /quizz when play again is clicked', () => {});
+
+  it("renders all the score panels", async () => {
+    (getHighestScoresAction as jest.Mock).mockResolvedValue(mockResults);
+
+    // Destructure directly from render()
+    const {findAllByTestId } = render(<LeaderBoard />);
+
+    // Wait for the panels to appear
+    const panels = await findAllByTestId("score-panel-user");
+
+    expect(panels).toHaveLength(mockResults.length);
+    expect(panels[0]).toHaveTextContent("You");
+    expect(panels[1]).toHaveTextContent("Lucía");
+    expect(panels[2]).toHaveTextContent("Marco");
+    expect(panels[3]).toHaveTextContent("Sara");
+    expect(panels[4]).toHaveTextContent("Tomás");
+  });
+
+  it('redirects to /quizz when play again is clicked', async() => {
+    const {getByTestId} = render(<LeaderBoard/>);
+    const button = getByTestId("play-again-test");
+    fireEvent.click(button);
+
+    waitFor(() => {
+      expect(mockReplace).toHaveBeenCalledWith('/quizz')
+    })    
+  });
 });

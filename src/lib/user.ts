@@ -3,8 +3,10 @@ import User from '@/models/User';
 
 export interface UserI {
   _id?: string;
+  id: string;
   email: string;
   password: string;
+  userName: string;
 }
 
 type UserResult = 
@@ -30,16 +32,14 @@ export async function createUser(
     return { success: false, error: 'Failed to create user' };
   }
 }
-
-// TODO: ADD Types here
-export async function findUserByEmail(email: string){
+export async function findUserByEmail(email: string):Promise<UserI | null>{
   try {
     await connectToDatabase();
 
     const user = await User.findOne({ email }).exec();
-    return user;  // returns null if not found or user document if found
+    return user;  
   } catch (err) {
     console.error('Error finding user:', err);
-    return null; // or throw, depending on your error handling preference
+    return null; 
   }
 }

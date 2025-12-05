@@ -76,7 +76,6 @@ export const filterByCorrectAnswerSelected = (questions: ModifiedQuestionI[]):Mo
   });
 }
 
-// TODO: Refactor these to use the same method
 export const getNumberOfQuestionsWithCorrectAnswer = (questions: ModifiedQuestionI[]):number => {
   const rigthQuestions = filterByCorrectAnswerSelected(questions);
   return rigthQuestions.length;

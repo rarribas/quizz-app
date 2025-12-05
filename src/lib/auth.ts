@@ -14,7 +14,7 @@ export const authConfig = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<User | null>  {
         if(!credentials) return null;
         const user = await findUserByEmail(credentials.email);
         if (!user) return null;

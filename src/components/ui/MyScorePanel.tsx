@@ -17,10 +17,7 @@ export default function MyScorePanel({
 }:MyScorePanelI){
 
   const [ranking, setRanking] = useState<number | null>(null);
-  // TODO: test
-  // If the data comes OK it should display
-  // What if it doesn't come in a shape expected
-  // What if it comes with nothing?
+
   useEffect(() => {
     async function fetchRanking(){
       const userRank =  await getRanking(score.toString());

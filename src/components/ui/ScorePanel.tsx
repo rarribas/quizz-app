@@ -26,7 +26,7 @@ export default function ScorePanel({
   return(
     <Panel className={classList}>
       <div>
-        <p className="font-bold">{isCurrentUser ? 'You' : user}</p>
+        <p data-testid="score-panel-user" className="font-bold">{isCurrentUser ? 'You' : user}</p>
         <p>{numberCorrectAnswers}/10 correct - {timeBonus}s bonus</p>
       </div>
       <div>

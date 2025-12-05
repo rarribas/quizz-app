@@ -24,8 +24,6 @@ export default function QuestionWorkflow(){
   const {questions, completed, time, setCompleted} = useQuizzStateStore();
   const {loading, error} = useFetchQuestions();
 
-  // TODO: Wrap this in a higher order component to do the redirect
-  // export default WithAuth(LoginForm, properties here );
   useEffect(() =>{
     if(!configuration || !configuration.done){
       router.replace("/quizz");
