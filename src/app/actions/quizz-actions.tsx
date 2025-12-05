@@ -12,19 +12,34 @@ import { type QuizzCategoriesI } from "@/store/useQuizzCategoriesStore";
 
 const CAT_URL:string = "https://opentdb.com/api_category.php";
 
-export async function fetchCategories(): Promise<QuizzCategoriesI[]> {
-  try {
-    const res = await fetch(CAT_URL, {
-      next: { revalidate: 3600 },
-    });
+interface IFetchedCategories {
+  categories: QuizzCategoriesI[],
+  error: string,
+}
+export async function fetchCategories(): Promise<IFetchedCategories> {
+  const categoriesResponse = {
+    categories: [],
+    error:'',
+  } as IFetchedCategories;
 
-    const data = await res.json();
-    return data.trivia_categories ?? [];
-  } catch (error) {
-    console.error("fetchCategories error:", error);
-    throw new Error("Error while fetching categories. Please try again later")
-    // return [];
+  const res = await fetch(CAT_URL, {
+    next: { revalidate: 3600 },
+  });
+
+  if (!res.ok) {
+    categoriesResponse.error = 'Error fetching categories, please try again later';
+    return categoriesResponse;
   }
+
+  const data = await res.json();
+  
+  if(!data.trivia_categories){
+    categoriesResponse.error = 'No categories in the response';
+    return categoriesResponse;
+  }
+
+  categoriesResponse.categories = data.trivia_categories;
+  return categoriesResponse;
 }
 
 
