@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:test": "NODE_ENV=test next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
