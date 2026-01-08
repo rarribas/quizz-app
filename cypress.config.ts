@@ -1,5 +1,8 @@
 import { defineConfig } from "cypress";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env.test" });
 
 export default defineConfig({
   e2e: {
