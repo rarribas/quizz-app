@@ -8,9 +8,9 @@ jest.mock("next-auth/react", () => ({
 
 describe("SignOutForm", () => {
   it("redirects to / on sign out", async () => {
-    const { getByText } = render(<SignOutForm />);
+    const {getByTestId } = render(<SignOutForm />);
 
-    const signOutButton = getByText("Sign Out");
+    const signOutButton = getByTestId("signout-button-test");
     fireEvent.click(signOutButton);
 
     expect(signOut).toHaveBeenCalledWith({ callbackUrl: "/" });

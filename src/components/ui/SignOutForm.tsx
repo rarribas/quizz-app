@@ -11,6 +11,7 @@ export default function SignOutForm() {
       <div className="mt-4 flex justify-center">
         <Button
           variant="destructive"
+          data-testid="signout-button-test"
           onClick={() => signOut({ callbackUrl: "/" })}
         >
           Sign Out

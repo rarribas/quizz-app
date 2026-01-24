@@ -111,18 +111,22 @@ export default function QuizzConfigForm({categories}:QuizzConfigFormProps){
               value={selectedCategory} 
               onValueChange={onChangeCategory}
             >
-              <SelectTrigger className="w-full mb-3">
+              <SelectTrigger className="w-full mb-3" data-testid="category-select">
                 <SelectValue placeholder="Insert Category" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={String(category.id)}>
+                {categories.map((category, index) => (
+                  <SelectItem 
+                    key={category.id} 
+                    value={String(category.id)}
+                    data-testid={`category-item-${index}`}
+                  >
                     {category.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            {errors.category && <p className="mb-3 text-red-400">{errors.category}</p>}
+            {errors.category && <p className="mb-3 text-red-400" data-testid="category-error">{errors.category}</p>}
           </div>
           <div>
             <Label 
@@ -134,22 +138,24 @@ export default function QuizzConfigForm({categories}:QuizzConfigFormProps){
               value={selectedDifficulty}
               onValueChange={onChangeDifficulty}
             >
-              <SelectTrigger className="w-[100%] mb-3">
+              <SelectTrigger className="w-[100%] mb-3" data-testid="difficulty-select">
                 <SelectValue id="difficulty" placeholder="Select Difficulty"/>
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(difficulty).map(([key, label]) => {
-                  return <SelectItem key={label} value={key}>{label}</SelectItem>
+                  return <SelectItem key={label} value={key} data-testid={`difficulty-item-${key}`}>{label}</SelectItem>
                 })}
               </SelectContent>
             </Select>
-            {errors.difficulty && <p className="mb-3 text-red-400">{errors.difficulty}</p>}
+            {errors.difficulty && <p className="mb-3 text-red-400" data-testid="difficulty-error">{errors.difficulty}</p>}
           </div>
           <QuizzDetails/>
           <div>
             <Button 
               type='submit'
-              className="bg-purple-600">
+              className="bg-purple-600"
+              data-testid="start-quizz-button"
+            >
                 Start Quizz
             </Button>
           </div>
