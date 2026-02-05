@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["jest", "@testing-library/jest-dom", "node"]
+  },
+  "include": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "jest.setup.ts",
+    "src/types/**/*.d.ts"
+  ],
+  "exclude": ["../node_modules", "../cypress"] // Jest tsconfig can exclude Cypress safely
+}

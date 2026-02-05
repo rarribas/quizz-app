@@ -25,7 +25,7 @@ const QuizzResults = () => {
       score={points} 
       numberCorrectAnswers={correctQuestions}
       timeBonus={bonus}
-      action={<StyledLink href="/quizz/leaderboard">View Leaderboard</StyledLink>}
+      action={<StyledLink href="/quizz/leaderboard" data-testid="view-leaderboard-link">View Leaderboard</StyledLink>}
     />
 
     {questions.map((question) => {

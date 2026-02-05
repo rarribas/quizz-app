@@ -6,6 +6,7 @@ interface ScorePanelI {
   timeBonus: number;
   user: string;
   isCurrentUser?: boolean;
+  dataTestId?: string;
 }
 
 export default function ScorePanel({
@@ -14,6 +15,7 @@ export default function ScorePanel({
   timeBonus,
   user,
   isCurrentUser,
+  dataTestId,
 }:ScorePanelI){
   let classList ='flex items-center justify-between border-1 w-full mb-4';
 
@@ -24,7 +26,7 @@ export default function ScorePanel({
   }
 
   return(
-    <Panel className={classList}>
+    <Panel className={classList} dataTestId={dataTestId}>
       <div>
         <p data-testid="score-panel-user" className="font-bold">{isCurrentUser ? 'You' : user}</p>
         <p>{numberCorrectAnswers}/10 correct - {timeBonus}s bonus</p>

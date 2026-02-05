@@ -83,6 +83,7 @@ const LeaderBoard = () => {
         {quizzResults.map((result, index) => (
           <ScorePanel 
             key={result._id || index}
+            dataTestId={`panel-test-${index}`}
             score={result.score}
             numberCorrectAnswers={result.numberOfCorrectAnswers}
             timeBonus={result.numberOfCorrectAnswers >= 5 ? result.time : 0}
