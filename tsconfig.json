@@ -41,6 +41,7 @@
     "src/types/**/*.d.ts"
   ],
   "exclude": [
-    "node_modules"
-  ] // **do NOT exclude Cypress here**
+    "node_modules",
+    "cypress"
+  ] 
 }
