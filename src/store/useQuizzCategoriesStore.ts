@@ -14,8 +14,6 @@ interface QuizzCategoryState {
   setCategories: (categories: QuizzCategoriesI[]) => void;
 }
 
-const CAT_URL:string = "https://opentdb.com/api_category.php";
-
 export const useQuizzCategoriesStore = create<QuizzCategoryState>((set) => ({
   categories: [],
   difficulty: {
